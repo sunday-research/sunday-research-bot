@@ -1,0 +1,22 @@
+services:
+  nginx:
+    image: nginx:1.25.3-alpine3.18
+    container_name: "${COMPOSE_PROJECT_NAME:-sunday-research-bot}.nginx"
+    working_dir: "/app"
+    depends_on:
+      - symfony
+    volumes:
+      - ".:/app"
+      - "./docker/nginx/vhost:/etc/nginx/conf.d"
+    ports:
+      - "${SYMFONY_EXTERNAL_PORT:-8000}:80"
+  symfony:
+    build:
+      context: docker/symfony
+      dockerfile: Dockerfile
+    container_name: "${COMPOSE_PROJECT_NAME:-sunday-research-bot}.symfony"
+    working_dir: "/app"
+    volumes:
+      - ".:/app"
+    env_file: .env
+    command: [ "/usr/local/sbin/php-fpm", "--nodaemonize" ]
