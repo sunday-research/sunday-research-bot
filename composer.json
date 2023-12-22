@@ -1,0 +1,29 @@
+{
+    "name": "sunday-research/sunday-research-bot",
+    "description": "Telegram bot for Sunday Research chat",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "authors": [
+        {
+            "name": "Vladislav Subbotin",
+            "email": "subb98@gmail.com",
+            "role": "Owner"
+        }
+    ],
+    "homepage": "https://github.com/sunday-research/sunday-research-bot",
+    "support": {
+        "issues": "https://github.com/sunday-research/sunday-research-bot/issues"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {}
+}
