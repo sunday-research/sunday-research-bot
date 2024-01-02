@@ -7,6 +7,9 @@ namespace App\Bundle\BotCommands\DTO;
 use App\Bundle\BotCommands\Exception\BotCommandScopeValidationException;
 use App\Bundle\BotCommands\ValueObject\BotCommandScope;
 
+/**
+ * @see \App\Tests\Bundle\BotCommands\DTO\BaseBotCommandsDTOTest
+ */
 class BaseBotCommandsDTO
 {
     protected BotCommandScope $scope;

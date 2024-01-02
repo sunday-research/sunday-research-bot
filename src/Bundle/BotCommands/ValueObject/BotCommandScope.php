@@ -6,6 +6,9 @@ namespace App\Bundle\BotCommands\ValueObject;
 
 use App\Bundle\BotCommands\Exception\BotCommandScopeValidationException;
 
+/**
+ * @see \App\Tests\Bundle\BotCommands\ValueObject\BotCommandScopeTest
+ */
 final readonly class BotCommandScope
 {
     public const BOT_COMMAND_SCOPE_TYPE_DEFAULT = 'default';
