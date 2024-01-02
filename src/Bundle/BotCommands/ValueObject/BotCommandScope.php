@@ -92,7 +92,10 @@ final readonly class BotCommandScope
             throw new BotCommandScopeValidationException('BotCommand chat_id must not be null');
         }
 
-        if (self::BOT_COMMAND_SCOPE_TYPE_CHAT_MEMBER === $type && null === $this->chatId) {
+        if (
+            self::BOT_COMMAND_SCOPE_TYPE_CHAT_MEMBER === $type
+            && (null === $this->chatId || null === $this->userId)
+        ) {
             throw new BotCommandScopeValidationException('BotCommand chat_id must not be null');
         }
     }
