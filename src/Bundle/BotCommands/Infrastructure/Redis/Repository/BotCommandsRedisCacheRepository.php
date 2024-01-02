@@ -12,6 +12,9 @@ use App\Bundle\BotCommands\ValueObject\BotCommand;
 use App\Bundle\BotCommands\ValueObject\BotCommandsList;
 use Predis\ClientInterface;
 
+/**
+ * @see \App\Tests\Bundle\BotCommands\Infrastructure\Redis\Repository\BotCommandsRedisCacheRepositoryTest
+ */
 final readonly class BotCommandsRedisCacheRepository implements BotCommandsCacheRepositoryInterface
 {
     private const CACHE_KEY_PREFIX = 'bot_commands_cache';
