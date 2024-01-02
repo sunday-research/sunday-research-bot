@@ -22,3 +22,22 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    Longman\TelegramBot\Telegram:
+        arguments:
+            $api_key: '%env(string:SUNDAY_RESEARCH_TELEGRAM_BOT_API_KEY)%'
+            $bot_username: '%env(string:SUNDAY_RESEARCH_TELEGRAM_BOT_USERNAME)%'
+        calls:
+            - useGetUpdatesWithoutDatabase: []
+
+    Predis\ClientInterface:
+        alias: Predis\Client
+
+    Predis\Client:
+        arguments:
+            $parameters: "tcp://%env(string:REDIS_HOSTNAME)%:%env(int:REDIS_PORT)%"
+            $options:
+                parameters:
+                    password: '%env(string:REDIS_PASSWORD)%'
+                    database: '%env(int:REDIS_DATABASE)%'
+                    timeout: '%env(string:REDIS_TIMEOUT)%'
+                    read_write_timeout: '%env(string:REDIS_READ_WRITE_TIMEOUT)%'
