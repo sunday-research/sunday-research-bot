@@ -14,9 +14,17 @@ use App\Bundle\BotCommands\Exception\SetBotCommandsException;
 use App\Bundle\BotCommands\ValueObject\BotCommand;
 use App\Bundle\BotCommands\ValueObject\BotCommandsList;
 use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Telegram;
 
 final readonly class BotCommandsLongmanTelegramBotApiRepository implements BotCommandsTelegramBotApiRepositoryInterface
 {
+    /**
+     * @note Свойство $telegram используется неявно статичным классом \Longman\TelegramBot\Request
+     */
+    public function __construct(private Telegram $telegram)
+    {
+    }
+
     /**
      * @throws GetBotCommandsException
      */

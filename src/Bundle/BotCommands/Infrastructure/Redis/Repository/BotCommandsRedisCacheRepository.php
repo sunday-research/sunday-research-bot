@@ -30,9 +30,6 @@ final readonly class BotCommandsRedisCacheRepository implements BotCommandsCache
         return (bool)$this->client->exists($cacheKey);
     }
 
-    /**
-     * @todo: потенциально могут быть ошибки, если каким-то образом данные в кэше оказались не валидными
-     */
     public function getBotCommands(GetBotCommandsDTO $getBotCommandsDTO): BotCommandsList
     {
         $cacheKey = $this->getCacheKey($getBotCommandsDTO->getScope()->getType());
@@ -56,7 +53,7 @@ final readonly class BotCommandsRedisCacheRepository implements BotCommandsCache
         foreach ($setBotCommandsDTO->getCommands() as $botCommand) {
             $this->client->hset($cacheKey, $botCommand->getCommand(), $botCommand->getDescription());
         }
-        $this->client->expire($cacheKey, $ttlInSeconds, 'EX');
+        $this->client->expire($cacheKey, $ttlInSeconds);
         $this->client->exec();
     }
 

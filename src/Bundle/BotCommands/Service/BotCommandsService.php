@@ -12,6 +12,7 @@ use App\Bundle\BotCommands\DTO\SetBotCommandsDTO;
 use App\Bundle\BotCommands\Exception\DeleteBotCommandsException;
 use App\Bundle\BotCommands\Exception\GetBotCommandsException;
 use App\Bundle\BotCommands\Exception\SetBotCommandsException;
+use App\Bundle\BotCommands\ValueObject\BotCommand;
 use App\Bundle\BotCommands\ValueObject\BotCommandsList;
 
 final readonly class BotCommandsService
@@ -23,7 +24,6 @@ final readonly class BotCommandsService
     }
 
     /**
-     * Возвращает список установленных команд для бота
      * @throws GetBotCommandsException
      */
     public function getBotCommands(GetBotCommandsDTO $getBotCommandsDTO): BotCommandsList
@@ -41,7 +41,6 @@ final readonly class BotCommandsService
     }
 
     /**
-     * Устанавливает список команд для бота
      * @throws SetBotCommandsException
      */
     public function setBotCommands(SetBotCommandsDTO $setBotCommandsDTO): void
@@ -51,12 +50,23 @@ final readonly class BotCommandsService
     }
 
     /**
-     * Удаляет установленные ранее команды для бота
      * @throws DeleteBotCommandsException
      */
     public function deleteBotCommands(DeleteBotCommandsDTO $deleteBotCommandsDTO): void
     {
         $this->botCommandsTelegramBotApiRepository->deleteBotCommands($deleteBotCommandsDTO);
         $this->botCommandsCacheRepository->deleteBotCommands($deleteBotCommandsDTO);
+    }
+
+    public function findCommandByCommandText(string $commandText, GetBotCommandsDTO $getBotCommandsDTO): ?BotCommand
+    {
+        $botCommandsList = $this->getBotCommands($getBotCommandsDTO);
+        /** @var BotCommand $botCommand */
+        foreach ($botCommandsList as $botCommand) {
+            if ($commandText === $botCommand->getCommand()) {
+                return $botCommand;
+            }
+        }
+        return null;
     }
 }
