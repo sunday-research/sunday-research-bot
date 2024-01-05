@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\BotGetUpdates\Handler;
+namespace App\Domain\BotGetUpdates\Handler\BotCommand;
 
 use App\Domain\BotGetUpdates\Contract\BotCommandHandlerInterface;
 use Longman\TelegramBot\Entities\Update;

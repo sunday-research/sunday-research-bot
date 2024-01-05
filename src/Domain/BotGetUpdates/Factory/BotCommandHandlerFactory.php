@@ -6,7 +6,7 @@ namespace App\Domain\BotGetUpdates\Factory;
 
 use App\Domain\BotGetUpdates\Contract\BotCommandHandlerInterface;
 use App\Domain\BotGetUpdates\Enum\BotCommandsEnum;
-use App\Domain\BotGetUpdates\Handler\BotCommandIssueHandler;
+use App\Domain\BotGetUpdates\Handler\BotCommand\BotCommandIssueHandler;
 
 final class BotCommandHandlerFactory
 {
