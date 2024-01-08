@@ -29,8 +29,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-php-
 
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --ignore-platform-reqs
+        run: composer install --prefer-dist --no-progress
 
       - name: Run PHP-CS-Fixer
         run: ./vendor/bin/php-cs-fixer fix --dry-run --config=.php-cs-fixer.dist.php -v --show-progress=dots --stop-on-violation --using-cache=no
