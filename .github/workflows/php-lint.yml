@@ -30,7 +30,7 @@ jobs:
             ${{ runner.os }}-php-
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
+        run: composer install --prefer-dist --no-progress --ignore-platform-reqs
 
       - name: Run PHP-CS-Fixer
         run: ./vendor/bin/php-cs-fixer fix --dry-run --config=.php-cs-fixer.dist.php -v --show-progress=dots --stop-on-violation --using-cache=no
