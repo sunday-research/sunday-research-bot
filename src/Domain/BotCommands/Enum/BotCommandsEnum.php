@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\BotGetUpdates\Enum;
+namespace App\Domain\BotCommands\Enum;
 
 enum BotCommandsEnum: string
 {
-    case ISSUE = '/issue';
+    case ISSUE = 'issue';
 
     public static function getAllCommands(): array
     {

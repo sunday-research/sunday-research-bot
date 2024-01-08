@@ -7,7 +7,7 @@ namespace App\Command;
 use App\Bundle\BotCommands\DTO\SetBotCommandsDTO;
 use App\Bundle\BotCommands\Exception\SetBotCommandsException;
 use App\Bundle\BotCommands\Service\BotCommandsService;
-use App\Domain\BotGetUpdates\Enum\BotCommandsEnum;
+use App\Domain\BotCommands\Enum\BotCommandsEnum;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

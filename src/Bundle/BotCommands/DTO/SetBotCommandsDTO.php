@@ -49,7 +49,7 @@ final class SetBotCommandsDTO
      */
     public static function makeDTO(array $botCommands, ?array $scope = null): self
     {
-        return (new self($botCommands, $scope));
+        return new self($botCommands, $scope);
     }
 
     public function getCommands(): BotCommandsList

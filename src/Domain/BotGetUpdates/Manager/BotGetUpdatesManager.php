@@ -8,7 +8,7 @@ use App\Bundle\BotCommands\DTO\GetBotCommandsDTO;
 use App\Bundle\BotCommands\Service\BotCommandsService;
 use App\Bundle\BotCommands\ValueObject\BotCommand;
 use App\Bundle\BotGetUpdates\Service\BotGetUpdatesService;
-use App\Domain\BotGetUpdates\Factory\BotCommandHandlerFactory;
+use App\Domain\BotCommands\Factory\BotCommandHandlerFactory;
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Entities\Update;
@@ -44,7 +44,7 @@ final readonly class BotGetUpdatesManager
 
             /** @var Message $message */
             $message = $update->getMessage();
-            if ($message->getType() !== 'text') {
+            if ($message->getType() !== 'command') {
                 continue;
             }
 
@@ -54,7 +54,8 @@ final readonly class BotGetUpdatesManager
                 }
 
                 $botCommand = $this->botCommandsService->findCommandByCommandText(
-                    $message->getText(),
+                    ltrim($message->getText(), '/'),
+                    $update->getBotUsername(),
                     GetBotCommandsDTO::makeDTO()
                 );
 

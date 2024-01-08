@@ -58,12 +58,18 @@ final readonly class BotCommandsService
         $this->botCommandsCacheRepository->deleteBotCommands($deleteBotCommandsDTO);
     }
 
-    public function findCommandByCommandText(string $commandText, GetBotCommandsDTO $getBotCommandsDTO): ?BotCommand
-    {
+    public function findCommandByCommandText(
+        string $commandText,
+        string $botUsername,
+        GetBotCommandsDTO $getBotCommandsDTO
+    ): ?BotCommand {
         $botCommandsList = $this->getBotCommands($getBotCommandsDTO);
         /** @var BotCommand $botCommand */
         foreach ($botCommandsList as $botCommand) {
-            if ($commandText === $botCommand->getCommand()) {
+            if (
+                $commandText === $botCommand->getCommand()
+                || $commandText === sprintf('%s@%s', $botCommand->getCommand(), $botUsername)
+            ) {
                 return $botCommand;
             }
         }

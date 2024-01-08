@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\BotGetUpdates\Contract;
+namespace App\Domain\BotCommands\Contract;
 
 use Longman\TelegramBot\Entities\Update;
 
