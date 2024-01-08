@@ -1,0 +1,32 @@
+services:
+  nginx:
+    image: nginx:1.25.3-alpine3.18
+    container_name: "${COMPOSE_PROJECT_NAME:-sunday-research-bot}.nginx"
+    working_dir: "/app"
+    depends_on:
+      - symfony
+    volumes:
+      - ".:/app"
+      - "./docker/nginx/vhost:/etc/nginx/conf.d"
+    ports:
+      - "${SYMFONY_EXTERNAL_PORT:-8000}:80"
+  symfony:
+    build:
+      context: docker/symfony
+      dockerfile: Dockerfile
+    container_name: "${COMPOSE_PROJECT_NAME:-sunday-research-bot}.symfony"
+    working_dir: "/app"
+    depends_on:
+      - redis
+    volumes:
+      - ".:/app"
+    env_file: .env
+    command: [ "/usr/local/sbin/php-fpm", "--nodaemonize" ]
+  redis:
+    image: redis:7.2.3-alpine3.19
+    container_name: "${COMPOSE_PROJECT_NAME:-sunday-research-bot}.redis"
+    volumes:
+      - "./docker/redis/redis.conf:/etc/redis.conf"
+    command: [ "redis-server", "/etc/redis.conf" ]
+    ports:
+      - "${REDIS_EXTERNAL_PORT:-6379}:6379"
