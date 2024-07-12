@@ -30,3 +30,24 @@ services:
     command: [ "redis-server", "/etc/redis.conf" ]
     ports:
       - "${REDIS_EXTERNAL_PORT:-6379}:6379"
+  postgres:
+    image: postgres:16.3-alpine3.20
+    container_name: "${COMPOSE_PROJECT_NAME:-sunday-research-bot}.postgres"
+    # set shared memory limit when using docker-compose
+    shm_size: 256mb
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER:-sunday_research_bot}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB:-sunday_research_bot}"
+      PGUSER: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d", "${POSTGRES_DB:-sunday_research_bot}" ]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    volumes:
+      - "./docker/postgres/data:/var/lib/postgresql/data"
+    ports:
+      - "${POSTGRES_EXTERNAL_PORT:-5432}:5432"
