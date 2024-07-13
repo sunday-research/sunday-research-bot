@@ -12,6 +12,7 @@ services:
       - ".:/app"
     env_file: .env
     command: [ "/app/bin/console", "app:bot-update-listener" ]
+    stop_signal: SIGQUIT # этот сигнал используется по умолчанию
     deploy:
       resources:
         limits:

@@ -8,6 +8,7 @@ use App\Domain\BotGetUpdates\Manager\BotGetUpdatesManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\SignalableCommandInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
@@ -16,7 +17,7 @@ use Throwable;
     name: 'app:bot-update-listener',
     description: 'Команда для получения входящих обновлений для бота методом long polling',
 )]
-final class BotUpdateListenerCommand extends Command
+final class BotUpdateListenerCommand extends Command implements SignalableCommandInterface
 {
     public function __construct(
         private readonly BotGetUpdatesManager $botGetUpdatesManager,
@@ -39,5 +40,16 @@ final class BotUpdateListenerCommand extends Command
                 );
             }
         }
+    }
+
+    public function getSubscribedSignals(): array
+    {
+        return [SIGINT, SIGTERM, SIGQUIT];
+    }
+
+    public function handleSignal(int $signal, false|int $previousExitCode = 0): int|false
+    {
+        $this->logger->info('Graceful shutdown handled', ['signal' => $signal]);
+        return Command::SUCCESS;
     }
 }
