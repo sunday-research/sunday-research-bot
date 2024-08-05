@@ -19,6 +19,8 @@ use Throwable;
 )]
 final class BotUpdateListenerCommand extends Command implements SignalableCommandInterface
 {
+    private bool $wasStop = false;
+
     public function __construct(
         private readonly BotGetUpdatesManager $botGetUpdatesManager,
         private readonly LoggerInterface $logger,
@@ -29,6 +31,9 @@ final class BotUpdateListenerCommand extends Command implements SignalableComman
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         while (true) {
+            if ($this->wasStop) {
+                return Command::SUCCESS;
+            }
             try {
                 $this->botGetUpdatesManager->run();
             } catch (Throwable $e) {
@@ -49,7 +54,8 @@ final class BotUpdateListenerCommand extends Command implements SignalableComman
 
     public function handleSignal(int $signal, false|int $previousExitCode = 0): int|false
     {
-        $this->logger->info('Graceful shutdown handled', ['signal' => $signal]);
-        return Command::SUCCESS;
+        $this->wasStop = true;
+        $this->logger->info('Graceful shutdown handled', ['signal' => $signal, 'wasStop' => $this->wasStop]);
+        return false; // continue normal execution
     }
 }
