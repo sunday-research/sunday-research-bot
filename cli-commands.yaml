@@ -8,6 +8,7 @@ services:
     depends_on:
       - redis
       - postgres
+      - prometheus
     volumes:
       - ".:/app"
     env_file: .env

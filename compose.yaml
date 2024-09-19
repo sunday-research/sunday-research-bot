@@ -27,6 +27,7 @@ services:
       - nginx
       - redis
       - postgres
+      - prometheus
     volumes:
       - ".:/app"
     env_file: .env
@@ -72,3 +73,17 @@ services:
       - "./docker/postgres/data:/var/lib/postgresql/data"
     ports:
       - "${POSTGRES_EXTERNAL_PORT:-5432}:5432"
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: "${COMPOSE_PROJECT_NAME:-sunday-research-bot}.prometheus"
+    healthcheck:
+      test: [ "CMD", "wget", "http://127.0.0.1:9090" ]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    volumes:
+      - "./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
+      - "./docker/prometheus/data:/prometheus"
+    ports:
+      - "${PROMETHEUS_EXTERNAL_PORT:-9090}:9090"
