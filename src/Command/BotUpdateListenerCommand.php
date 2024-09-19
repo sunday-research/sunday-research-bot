@@ -36,7 +36,9 @@ final class BotUpdateListenerCommand extends Command implements SignalableComman
             }
             try {
                 $this->botGetUpdatesManager->run();
+                // todo: тут должен быть пинг наружу, в систему мониторинга, который покажет, что контейнер жив и не завис
             } catch (Throwable $e) {
+                // todo: прикрутить sentry или алертинг на такие логи
                 $this->logger->error(
                     sprintf('Unhandled error while process getUpdates: `%s`', $e->getMessage()),
                     [
