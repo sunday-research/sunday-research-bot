@@ -21,4 +21,4 @@
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
 
-/docker/postgres/data/
+/docker/prometheus/data/

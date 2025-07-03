@@ -1,4 +1,4 @@
-name: PHP Lint
+name: PHP Lint & Tests
 
 on: [push, pull_request]
 
@@ -9,6 +9,26 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: test_sunday_research_bot
+          POSTGRES_USER: test_sunday_research_bot
+          POSTGRES_PASSWORD: '!ChangeMe!'
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    env:
+      APP_ENV: test
+      POSTGRES_HOST: localhost
+      PGPASSWORD: '!ChangeMe!'
 
     steps:
       - uses: actions/checkout@v3
@@ -29,6 +49,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
+          extensions: pdo_pgsql
 
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-progress
@@ -36,12 +57,14 @@ jobs:
       - name: Run PHP-CS-Fixer
         run: ./vendor/bin/php-cs-fixer fix --dry-run --config=.php-cs-fixer.dist.php -v --show-progress=dots --stop-on-violation --using-cache=no
 
-      - name: Check PHP-CS-Fixer exit code
+      - name: Wait for PostgreSQL to be ready
         run: |
-          if [ "${?}" -ne 0 ]; then
-            echo "PHP-CS-Fixer complete with exit code not 0: ${?}";
-            exit 1
-          fi
+          until pg_isready -h localhost -p 5432 -U test_sunday_research_bot; do
+            echo "Waiting for Postgres..."; sleep 1;
+          done
+
+      - name: Run Doctrine migrations
+        run: php bin/console doctrine:migrations:migrate --no-interaction --env=test
 
       - name: Run PHPUnit tests
         run: ./vendor/bin/phpunit
