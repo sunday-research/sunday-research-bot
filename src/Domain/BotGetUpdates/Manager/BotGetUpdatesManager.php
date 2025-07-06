@@ -54,7 +54,7 @@ final readonly class BotGetUpdatesManager
                 }
 
                 $botCommand = $this->botCommandsService->findCommandByCommandText(
-                    ltrim($message->getText(), '/'),
+                    $message->getCommand(),
                     $update->getBotUsername(),
                     GetBotCommandsDTO::makeDTO()
                 );
