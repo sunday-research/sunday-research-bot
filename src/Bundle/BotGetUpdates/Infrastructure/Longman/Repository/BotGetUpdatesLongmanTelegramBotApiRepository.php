@@ -20,6 +20,6 @@ final readonly class BotGetUpdatesLongmanTelegramBotApiRepository implements Bot
      */
     public function getUpdates(): ServerResponse
     {
-        return $this->telegram->handleGetUpdates();
+        return $this->telegram->handleGetUpdates([]);
     }
 }
