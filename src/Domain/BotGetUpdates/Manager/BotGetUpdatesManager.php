@@ -35,8 +35,11 @@ final readonly class BotGetUpdatesManager
             return;
         }
 
-        /** @var Update[] $results */
+        /** @var Update[] $result */
         $result = $response->getResult();
+        if (empty($result)) {
+            return;
+        }
         foreach ($result as $update) {
             if (!$this->isTypeMessage($update->getUpdateType())) {
                 continue;
