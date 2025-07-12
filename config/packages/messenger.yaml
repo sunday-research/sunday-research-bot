@@ -11,7 +11,7 @@ framework:
 
         routing:
             # Route your messages to the transports
-            'App\Domain\BotCommands\Message\BotCommandIssueMessage': async
+            'App\Module\BotCommands\Message\BotCommandIssueMessage': async
 
 # when@test:
 #    framework:

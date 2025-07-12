@@ -12,7 +12,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'test:environment-variables',
-    description: 'Выводит на экран значения переменных окружения, которые используются в приложении.',
+    description: 'Выводит на экран значения переменных окружения, используемых в приложении',
 )]
 final class TestEnvironmentVariablesCommand extends Command
 {
