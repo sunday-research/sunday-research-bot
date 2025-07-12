@@ -1,6 +1,6 @@
 # Sunday Research Bot
 
-![](https://i.imgur.com/ywXyTAV.jpg)
+![](https://i.imgur.com/DoIyvnp.png)
 
 ## Описание
 Телеграм-бот, написанный специально для [чата Sunday Research](https://t.me/sunday_research),
