@@ -31,5 +31,6 @@
         <ini name="serialize_precision" value="14"/>
 
         <const name="PHPUNIT_TESTSUITE" value="true"/>
+        <env name="APP_ENV" value="test"/>
     </php>
 </phpunit>
