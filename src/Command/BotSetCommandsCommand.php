@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Bundle\BotCommands\DTO\SetBotCommandsDTO;
-use App\Bundle\BotCommands\Exception\SetBotCommandsException;
-use App\Bundle\BotCommands\Service\BotCommandsService;
-use App\Domain\BotCommands\Enum\BotCommandsEnum;
+use App\Module\BotCommands\DTO\SetBotCommandsDTO;
+use App\Module\BotCommands\Enum\BotCommandsEnum;
+use App\Module\BotCommands\Exception\SetBotCommandsException;
+use App\Module\BotCommands\Service\BotCommandsService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,7 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'app:bot-set-commands',
-    description: 'Команда для установки боту списка команд',
+    description: 'Устанавливает команды Telegram-бота',
 )]
 final class BotSetCommandsCommand extends Command
 {
@@ -28,12 +28,15 @@ final class BotSetCommandsCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+
         try {
             $this->botCommandsService->setBotCommands(SetBotCommandsDTO::makeDTO(BotCommandsEnum::getAllCommands()));
             $io->success('setBotCommands method is completed');
+
             return Command::SUCCESS;
         } catch (SetBotCommandsException $e) {
             $io->error('setBotCommands method is failed: ' . $e->getMessage());
+
             return Command::FAILURE;
         }
     }

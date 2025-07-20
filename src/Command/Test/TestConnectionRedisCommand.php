@@ -15,7 +15,7 @@ use Throwable;
 
 #[AsCommand(
     name: 'test:connection-redis',
-    description: 'Command for testing connection to Redis server',
+    description: 'Тестирует соединение с Redis-сервером',
 )]
 final class TestConnectionRedisCommand extends Command
 {
@@ -36,13 +36,16 @@ final class TestConnectionRedisCommand extends Command
 
             if ($payload === 'PONG') {
                 $io->success('Redis is running: we have PONG answer!');
+
                 return Command::SUCCESS;
             } else {
                 $io->error("Something went wrong.. Response: {$payload}");
+
                 return Command::FAILURE;
             }
         } catch (Throwable $e) {
             $io->error("Something went wrong.. Error message: {$e->getMessage()}");
+
             return Command::FAILURE;
         }
     }

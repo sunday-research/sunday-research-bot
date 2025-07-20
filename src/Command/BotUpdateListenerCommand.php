@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Domain\BotGetUpdates\Manager\BotGetUpdatesManager;
+use App\Module\BotGetUpdates\BotGetUpdatesManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -15,7 +15,7 @@ use Throwable;
 
 #[AsCommand(
     name: 'app:bot-update-listener',
-    description: 'Команда для получения входящих обновлений для бота методом long polling',
+    description: 'Получает входящие обновления для Telegram-бота методом long polling',
 )]
 final class BotUpdateListenerCommand extends Command implements SignalableCommandInterface
 {
@@ -34,6 +34,7 @@ final class BotUpdateListenerCommand extends Command implements SignalableComman
             if ($this->wasStop) {
                 return Command::SUCCESS;
             }
+
             try {
                 $this->botGetUpdatesManager->run();
             } catch (Throwable $e) {
@@ -56,6 +57,7 @@ final class BotUpdateListenerCommand extends Command implements SignalableComman
     {
         $this->wasStop = true;
         $this->logger->info('Graceful shutdown handled', ['signal' => $signal, 'wasStop' => $this->wasStop]);
+
         return false; // continue normal execution
     }
 }

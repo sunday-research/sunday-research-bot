@@ -15,7 +15,7 @@ use Throwable;
 
 #[AsCommand(
     name: 'app:delete-webhook',
-    description: 'Удаляет вебхук для бота Telegram, если нужно использовать long polling для получения обновлений (getUpdates)',
+    description: 'Удаляет вебхук для Telegram-бота, если нужно использовать long polling для получения обновлений (getUpdates)',
 )]
 class DeleteWebhookCommand extends Command
 {

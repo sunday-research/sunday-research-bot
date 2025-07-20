@@ -14,7 +14,7 @@ use Throwable;
 
 #[AsCommand(
     name: 'test:connection-postgres',
-    description: 'Command for testing connection to PostgreSQL server',
+    description: 'Тестирует соединение с PostgreSQL-сервером',
 )]
 final class TestConnectionPostgresCommand extends Command
 {
@@ -32,9 +32,11 @@ final class TestConnectionPostgresCommand extends Command
             $result = $connect->executeQuery('SELECT NOW()');
             $io->success("PostgreSQL is running, current time: {$result->fetchOne()}");
             $connect->close();
+
             return Command::SUCCESS;
         } catch (Throwable $e) {
             $io->error("Something went wrong.. Error message: {$e->getMessage()}");
+
             return Command::FAILURE;
         }
     }
