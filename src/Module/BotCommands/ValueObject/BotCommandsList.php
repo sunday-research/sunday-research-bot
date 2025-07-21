@@ -11,8 +11,15 @@ use Countable;
 use IteratorAggregate;
 use Traversable;
 
+/**
+ * @implements ArrayAccess<int, BotCommand>
+ * @implements IteratorAggregate<int, BotCommand>
+ */
 final class BotCommandsList implements Countable, IteratorAggregate, ArrayAccess
 {
+    /**
+     * @var BotCommand[]
+     */
     private array $botCommands = [];
 
     public function count(): int
@@ -58,6 +65,9 @@ final class BotCommandsList implements Countable, IteratorAggregate, ArrayAccess
         unset($this->botCommands[$offset]);
     }
 
+    /**
+     * @return array<int, array<string, string>>
+     */
     public function toArray(): array
     {
         $result = [];

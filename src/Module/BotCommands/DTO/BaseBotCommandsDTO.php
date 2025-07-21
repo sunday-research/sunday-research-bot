@@ -15,6 +15,7 @@ class BaseBotCommandsDTO
     protected BotCommandScope $scope;
 
     /**
+     * @param array<string, string|null>|null $scope
      * @throws BotCommandScopeValidationException
      */
     protected function __construct(?array $scope = null)
@@ -27,6 +28,7 @@ class BaseBotCommandsDTO
     }
 
     /**
+     * @param array<string, string|null>|null $scope
      * @todo: отказаться от статического метода, использовать конструктор
      * @throws BotCommandScopeValidationException
      */
@@ -40,6 +42,9 @@ class BaseBotCommandsDTO
         return $this->scope;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

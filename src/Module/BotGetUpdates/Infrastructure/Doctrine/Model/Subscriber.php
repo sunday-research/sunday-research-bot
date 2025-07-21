@@ -17,7 +17,7 @@ class Subscriber
     #[ORM\Column(name: "id", type: "uuid", unique: true)]
     #[ORM\GeneratedValue(strategy: "CUSTOM")]
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    private ?UuidInterface $id = null;
+    private UuidInterface $id;
 
     #[ORM\Column(name: "telegram_user_id", type: "bigint", unique: true)]
     private int $telegramUserId;
@@ -63,6 +63,7 @@ class Subscriber
     public function setUsername(?string $username): self
     {
         $this->username = $username;
+
         return $this;
     }
 
@@ -86,6 +87,7 @@ class Subscriber
     public function setLastName(?string $lastName): self
     {
         $this->lastName = $lastName;
+
         return $this;
     }
 
@@ -97,6 +99,7 @@ class Subscriber
     public function setLanguageCode(?string $languageCode): self
     {
         $this->languageCode = $languageCode;
+
         return $this;
     }
 
@@ -108,6 +111,7 @@ class Subscriber
     public function setIsPremium(bool $isPremium): self
     {
         $this->isPremium = $isPremium;
+
         return $this;
     }
 }

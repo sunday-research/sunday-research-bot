@@ -60,6 +60,9 @@ readonly class ReplyParameters
         return $this->quotePosition;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

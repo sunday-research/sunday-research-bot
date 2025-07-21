@@ -59,6 +59,9 @@ final readonly class BotCommandScope
         return $this->userId;
     }
 
+    /**
+     * @return array<string, string|null>
+     */
     public function toArray(): array
     {
         $result = [

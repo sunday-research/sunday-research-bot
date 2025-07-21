@@ -28,6 +28,9 @@ readonly class SendTextMessageDTO
     ) {
     }
 
+    /**
+     * @param MessageEntity[] $entities
+     */
     public static function makeDTO(
         string $chatId,
         string $text,
@@ -74,6 +77,9 @@ readonly class SendTextMessageDTO
         return $this->parseMode;
     }
 
+    /**
+     * @return MessageEntity[]
+     */
     public function getEntities(): array
     {
         return $this->entities;
@@ -104,6 +110,9 @@ readonly class SendTextMessageDTO
         return $this->replyMarkup;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

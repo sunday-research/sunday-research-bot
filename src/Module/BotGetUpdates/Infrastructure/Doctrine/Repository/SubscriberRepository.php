@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Module\BotGetUpdates\Infrastructure\Doctrine\Repository;
 
 use App\Module\BotGetUpdates\Infrastructure\Doctrine\Model\Subscriber;
@@ -10,9 +12,9 @@ use Doctrine\Persistence\ManagerRegistry;
  * @extends ServiceEntityRepository<Subscriber>
  *
  * @method Subscriber|null find($id, $lockMode = null, $lockVersion = null)
- * @method Subscriber|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Subscriber|null findOneBy(array<string, mixed> $criteria, array<string, string> $orderBy = null)
  * @method Subscriber[]    findAll()
- * @method Subscriber[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Subscriber[]    findBy(array<string, mixed> $criteria, array<string, string> $orderBy = null, $limit = null, $offset = null)
  */
 class SubscriberRepository extends ServiceEntityRepository
 {

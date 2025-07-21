@@ -13,6 +13,7 @@ final class BotCommandScopeTest extends TestCase
 {
     /**
      * @note scope_type, chat_id, user_id
+     * @return array<int, array{0: string, 1: string|null, 2: string|null}>
      */
     public static function createBotCommandScopeSuccessfullyDataProvider(): array
     {
@@ -29,6 +30,7 @@ final class BotCommandScopeTest extends TestCase
 
     /**
      * @note scope_type, chat_id, user_id
+     * @return array<int, array{0: string, 1: string|null, 2: string|null}>
      */
     public static function createBotCommandScopeFailDataProvider(): array
     {
@@ -43,7 +45,7 @@ final class BotCommandScopeTest extends TestCase
     public function testCreateBotCommandScopeSuccessfully(string $scopeType, ?string $chatId, ?string $userId): void
     {
         $botCommandScope = new BotCommandScope($scopeType, $chatId, $userId);
-        $this->assertTrue($botCommandScope instanceof BotCommandScope, 'Unexpected result');
+        $this->assertInstanceOf(BotCommandScope::class, $botCommandScope, 'Unexpected result');
     }
 
     #[DataProvider('createBotCommandScopeFailDataProvider')]

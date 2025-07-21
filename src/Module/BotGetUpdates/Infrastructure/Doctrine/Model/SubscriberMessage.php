@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Module\BotGetUpdates\Infrastructure\Doctrine\Model;
 
 use App\Module\BotGetUpdates\Infrastructure\Doctrine\Repository\SubscriberMessageRepository;
@@ -22,7 +24,7 @@ class SubscriberMessage
     #[ORM\Column(name: "id", type: "uuid", unique: true)]
     #[ORM\GeneratedValue(strategy: "CUSTOM")]
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    private ?UuidInterface $id = null;
+    private UuidInterface $id;
 
     #[ORM\ManyToOne(targetEntity: Subscriber::class)]
     #[ORM\JoinColumn(name: "subscriber_id", referencedColumnName: "id", nullable: false, onDelete: "RESTRICT")]
@@ -76,6 +78,7 @@ class SubscriberMessage
     {
         return $this->messageId;
     }
+
     public function setMessageId(int $messageId): self
     {
         $this->messageId = $messageId;
@@ -91,6 +94,7 @@ class SubscriberMessage
     public function setMessageText(string $messageText): self
     {
         $this->messageText = $messageText;
+
         return $this;
     }
 

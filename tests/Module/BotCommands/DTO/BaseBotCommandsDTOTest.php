@@ -13,6 +13,7 @@ final class BaseBotCommandsDTOTest extends TestCase
 {
     /**
      * @note scope_type, chat_id, user_id
+     * @return array<int, array{0: string, 1: string|null, 2: string|null}>
      */
     public static function createBaseBotCommandsDTOSuccessfullyDataProvider(): array
     {
@@ -29,6 +30,7 @@ final class BaseBotCommandsDTOTest extends TestCase
 
     /**
      * @note scope_type, chat_id, user_id
+     * @return array<int, array{0: string, 1: string|null, 2: string|null}>
      */
     public static function createBaseBotCommandsDTOFailDataProvider(): array
     {
@@ -50,7 +52,7 @@ final class BaseBotCommandsDTOTest extends TestCase
             'chat_id' => $chatId,
             'user_id' => $userId,
         ]);
-        $this->assertTrue($baseBotCommandsDTO instanceof BaseBotCommandsDTO, 'Unexpected result');
+        $this->assertInstanceOf(BaseBotCommandsDTO::class, $baseBotCommandsDTO, 'Unexpected result');
     }
 
     #[DataProvider('createBaseBotCommandsDTOFailDataProvider')]
