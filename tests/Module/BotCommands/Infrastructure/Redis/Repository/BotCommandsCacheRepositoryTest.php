@@ -14,6 +14,7 @@ final class BotCommandsCacheRepositoryTest extends TestCase
 {
     /**
      * @note scope_type, is_exists, chat_id, user_id
+     * @return array<int, array{0: string, 1: int, 2: string|null, 3: string|null}>
      */
     public static function isBotCommandsCachedSuccessfullyDataProvider(): array
     {
@@ -30,6 +31,7 @@ final class BotCommandsCacheRepositoryTest extends TestCase
 
     /**
      * @note scope_type, result_data [command => description, ...], chat_id, user_id
+     * @return array<int, array{0: string, 1: array<string, string>, 2: string|null, 3: string|null}>
      */
     public static function getBotCommandsSuccessfullyDataProvider(): array
     {
@@ -71,6 +73,9 @@ final class BotCommandsCacheRepositoryTest extends TestCase
         );
     }
 
+    /**
+     * @param array<string, string> $resultData
+     */
     #[DataProvider('getBotCommandsSuccessfullyDataProvider')]
     public function testGetBotCommandsSuccessfully(
         string $scopeType,

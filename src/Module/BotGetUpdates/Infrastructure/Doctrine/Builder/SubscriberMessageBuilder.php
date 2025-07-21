@@ -12,7 +12,9 @@ class SubscriberMessageBuilder
     public static function build(DoctrineSubscriberMessage $doctrineMessage): DomainSubscriberMessage
     {
         return new DomainSubscriberMessage(
+            /** @phpstan-ignore-next-line mixed.type */
             id: $doctrineMessage->getId()?->toString(),
+            /** @phpstan-ignore-next-line mixed.type */
             subscriberId: $doctrineMessage->getSubscriber()->getId()?->toString(),
             chatId: $doctrineMessage->getChatId(),
             messageId: $doctrineMessage->getMessageId(),

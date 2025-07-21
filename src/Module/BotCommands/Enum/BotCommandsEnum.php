@@ -8,6 +8,9 @@ enum BotCommandsEnum: string
 {
     case ISSUE = 'issue';
 
+    /**
+     * @return array<int, array<string, string>>
+     */
     public static function getAllCommands(): array
     {
         return [

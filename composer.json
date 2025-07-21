@@ -76,6 +76,23 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "phpstan-full-scan": [
+            "./vendor/bin/phpstan analyse --memory-limit=2048M"
+        ],
+        "phpstan-baseline": [
+            "rm -f ./phpstan-baseline.neon",
+            "./vendor/bin/phpstan analyse --memory-limit=2048M --generate-baseline"
+        ],
+        "php-cs-fixer-diff": "php -d memory_limit=2048M ./vendor/bin/php-cs-fixer fix --dry-run --config=.php-cs-fixer.dist.php -v --show-progress=dots --stop-on-violation --using-cache=no",
+        "php-cs-fixer-fix": "php -d memory_limit=2048M ./vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php -v --show-progress=dots --stop-on-violation --using-cache=no",
+        "phpunit": [
+            "php -d memory_limit=2048M ./vendor/bin/phpunit --no-coverage"
+        ],
+        "lint": [
+            "@php-cs-fixer-fix",
+            "@phpstan-full-scan",
+            "@phpunit"
         ]
     },
     "conflict": {
@@ -89,6 +106,8 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.46",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-doctrine": "^2.0",
         "phpunit/phpunit": "^10.5",
         "symfony/maker-bundle": "^1.52"
     }

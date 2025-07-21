@@ -11,10 +11,11 @@ use App\Module\BotGetUpdates\Infrastructure\Doctrine\Model\SubscriberMessage as 
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
 class SubscriberMessageBuilderTest extends TestCase
 {
-    private function createDoctrineSubscriber($uuid): DoctrineSubscriber
+    private function createDoctrineSubscriber(UuidInterface|null $uuid): DoctrineSubscriber
     {
         $subscriber = $this->createMock(DoctrineSubscriber::class);
         $subscriber->method('getId')->willReturn($uuid);

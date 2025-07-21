@@ -22,3 +22,7 @@
 ###< friendsofphp/php-cs-fixer ###
 
 /docker/prometheus/data/
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

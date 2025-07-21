@@ -14,9 +14,13 @@ class SubscriberFactory
             id: Uuid::uuid7()->toString(),
             telegramUserId: $user->getId(),
             firstName: $user->getFirstName(),
+            /** @phpstan-ignore-next-line nullCoalesce.expr */
             username: $user->getUsername() ?? null,
+            /** @phpstan-ignore-next-line nullCoalesce.expr */
             lastName: $user->getLastName() ?? null,
+            /** @phpstan-ignore-next-line nullCoalesce.expr */
             languageCode: $user->getLanguageCode() ?? null,
+            /** @phpstan-ignore-next-line nullCoalesce.expr */
             isPremium: $user->getIsPremium() ?? false,
         );
     }

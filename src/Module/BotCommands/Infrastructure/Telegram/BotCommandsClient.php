@@ -19,6 +19,7 @@ final readonly class BotCommandsClient
 {
     /**
      * @note Свойство $telegram используется неявно статичным классом \Longman\TelegramBot\Request
+     * @phpstan-ignore-next-line property.onlyWritten
      */
     public function __construct(private Telegram $telegram)
     {
@@ -38,6 +39,7 @@ final readonly class BotCommandsClient
         }
         $botCommandsList = new BotCommandsList();
         /** @var \Longman\TelegramBot\Entities\BotCommand $botCommand */
+        /** @phpstan-ignore-next-line mixed.type */
         foreach ($response->getResult() as $botCommand) {
             $botCommandsList[] = new BotCommand($botCommand->getCommand(), $botCommand->getDescription());
         }

@@ -21,6 +21,7 @@ class SubscriberMessageFactory
             messageId: $message->getMessageId(),
             messageText: $message->getText() ?? '',
             messageDate: (new DateTimeImmutable())->setTimestamp($message->getDate()),
+            /** @phpstan-ignore-next-line booleanAnd.leftAlwaysTrue */
             isBotSender: $message->getFrom() && $message->getFrom()->getIsBot(),
         );
     }

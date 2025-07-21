@@ -27,7 +27,7 @@ final class TestEnvironmentVariablesCommand extends Command
 
         $io->title('Все переменные окружения:');
         foreach ($envVars as $key => $value) {
-            $io->writeln("$key: $value");
+            $io->writeln("$key: " . (is_scalar($value) ? (string)$value : ''));
         }
 
         return Command::SUCCESS;

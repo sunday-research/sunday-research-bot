@@ -22,6 +22,9 @@ final readonly class BotCommand
         return $this->description;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function toArray(): array
     {
         return [

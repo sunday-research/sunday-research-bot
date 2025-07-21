@@ -48,6 +48,9 @@ final class BotUpdateListenerCommand extends Command implements SignalableComman
         }
     }
 
+    /**
+     * @return int[]
+     */
     public function getSubscribedSignals(): array
     {
         return [SIGINT, SIGTERM, SIGQUIT];

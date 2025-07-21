@@ -17,6 +17,8 @@ final class SetBotCommandsDTO
     private BotCommandScope $scope;
 
     /**
+     * @param array<int, array<string, string|null>> $botCommands
+     * @param array<string, string|null>|null $scope
      * @throws BotCommandsListAddCommandException
      * @throws BotCommandScopeValidationException
      */
@@ -25,9 +27,12 @@ final class SetBotCommandsDTO
         $botCommandsList = new BotCommandsList();
         foreach ($botCommands as $botCommand) {
             try {
+                if (empty($botCommand['command']) || empty($botCommand['description'])) {
+                    continue;
+                }
                 $botCommandsList[] = new BotCommand(
-                    $botCommand['command'] ?? null,
-                    $botCommand['description'] ?? null
+                    (string) $botCommand['command'],
+                    (string) $botCommand['description']
                 );
             } catch (TypeError $e) {
                 throw new BotCommandsListAddCommandException(
@@ -44,6 +49,8 @@ final class SetBotCommandsDTO
     }
 
     /**
+     * @param array<int, array<string, string|null>> $botCommands
+     * @param array<string, string|null>|null $scope
      * @todo: отказаться от статического метода создания DTO, использовать конструктор напрямую
      * @throws BotCommandsListAddCommandException
      * @throws BotCommandScopeValidationException
@@ -63,6 +70,9 @@ final class SetBotCommandsDTO
         return $this->scope;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [
