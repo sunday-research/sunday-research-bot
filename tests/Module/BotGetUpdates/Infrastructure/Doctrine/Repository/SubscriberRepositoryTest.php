@@ -22,6 +22,7 @@ class SubscriberRepositoryTest extends KernelTestCase
     {
         self::bootKernel();
         $container = static::getContainer();
+        /** @phpstan-ignore-next-line mixed.type */
         $this->em = $container->get(EntityManagerInterface::class);
         /** @var SubscriberRepository $repository */
         $repository = $this->em->getRepository(Subscriber::class);
@@ -49,7 +50,7 @@ class SubscriberRepositoryTest extends KernelTestCase
         $this->em->flush();
 
         $updated = $this->repository->find($subscriber->getId());
-        $this->assertEquals('Petrov', $updated->getLastName());
+        $this->assertEquals('Petrov', $updated?->getLastName());
     }
 
     public function testDeleteSubscriber(): void
@@ -76,6 +77,7 @@ class SubscriberRepositoryTest extends KernelTestCase
 
         $this->em->persist($subscriber);
         $this->em->flush();
+        /** @phpstan-ignore-next-line mixed.type */
         $this->createdSubscriberIds[] = $subscriber->getId()?->toString();
 
         return $subscriber;

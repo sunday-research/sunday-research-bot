@@ -27,6 +27,7 @@ class SubscriberMessageRepositoryTest extends KernelTestCase
     {
         self::bootKernel();
         $container = static::getContainer();
+        /** @phpstan-ignore-next-line mixed.type */
         $this->em = $container->get(EntityManagerInterface::class);
         /** @var SubscriberMessageRepository $repository */
         $repository = $this->em->getRepository(SubscriberMessage::class);
@@ -51,7 +52,7 @@ class SubscriberMessageRepositoryTest extends KernelTestCase
         $this->em->flush();
 
         $updated = $this->repository->find($message->getId());
-        $this->assertEquals('Updated text', $updated->getMessageText());
+        $this->assertEquals('Updated text', $updated?->getMessageText());
     }
 
     public function testDeleteSubscriberMessage(): void
@@ -103,7 +104,9 @@ class SubscriberMessageRepositoryTest extends KernelTestCase
 
         $this->em->flush();
 
+        /** @phpstan-ignore-next-line mixed.type */
         $this->createdSubscriberIds[] = $subscriber->getId()?->toString();
+        /** @phpstan-ignore-next-line mixed.type */
         $this->createdMessageIds[] = $message->getId()?->toString();
 
         $this->assertNotNull($subscriber->getId());
@@ -128,6 +131,7 @@ class SubscriberMessageRepositoryTest extends KernelTestCase
 
         $this->em->persist($subscriber);
         $this->em->flush();
+        /** @phpstan-ignore-next-line mixed.type */
         $this->createdSubscriberIds[] = $subscriber->getId()?->toString();
 
         return $subscriber;

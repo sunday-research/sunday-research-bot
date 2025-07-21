@@ -51,8 +51,9 @@ class SubscriberBuilderTest extends TestCase
 
         $doctrineSubscriber = new DoctrineSubscriber();
         $this->setDoctrineSubscriberId($doctrineSubscriber, null);
-        // Оставляем только валидные типы для остальных полей
+        /** @phpstan-ignore-next-line argument.type */
         $doctrineSubscriber->setTelegramUserId(null)
+            /** @phpstan-ignore-next-line argument.type */
             ->setFirstName(null)
             ->setUsername(null)
             ->setLastName(null)
@@ -61,8 +62,11 @@ class SubscriberBuilderTest extends TestCase
 
         $domainSubscriber = SubscriberBuilder::build($doctrineSubscriber);
 
+        /** @phpstan-ignore-next-line method.impossibleType */
         $this->assertNull($domainSubscriber->getId());
+        /** @phpstan-ignore-next-line method.impossibleType */
         $this->assertNull($domainSubscriber->getTelegramUserId());
+        /** @phpstan-ignore-next-line method.impossibleType */
         $this->assertNull($domainSubscriber->getFirstName());
         $this->assertNull($domainSubscriber->getUsername());
         $this->assertNull($domainSubscriber->getLastName());
