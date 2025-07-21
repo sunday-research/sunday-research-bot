@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Module\BotCommands\ValueObject;
 
-use App\Module\BotCommands\Exception\BotCommandsListAddCommandException;
 use ArrayAccess;
 use ArrayIterator;
 use Countable;
@@ -37,22 +36,16 @@ final class BotCommandsList implements Countable, IteratorAggregate, ArrayAccess
         return array_key_exists($offset, $this->botCommands);
     }
 
+    /**
+     * @phpstan-ignore-next-line return.unusedType
+     */
     public function offsetGet(mixed $offset): mixed
     {
         return $this->botCommands[$offset];
     }
 
-    /**
-     * @throws BotCommandsListAddCommandException
-     */
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        if (!$value instanceof BotCommand) {
-            throw new BotCommandsListAddCommandException(
-                'Incorrect instance of BotCommand. Provided ' . get_class($value)
-            );
-        }
-
         if (null === $offset) {
             $this->botCommands[] = $value;
         } else {
@@ -75,6 +68,7 @@ final class BotCommandsList implements Countable, IteratorAggregate, ArrayAccess
         foreach ($this->botCommands as $botCommand) {
             $result[] = $botCommand->toArray();
         }
+
         return $result;
     }
 }

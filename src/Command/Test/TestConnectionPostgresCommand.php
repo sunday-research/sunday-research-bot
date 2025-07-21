@@ -30,7 +30,8 @@ final class TestConnectionPostgresCommand extends Command
         try {
             $connect = $this->entityManager->getConnection();
             $result = $connect->executeQuery('SELECT NOW()');
-            $io->success("PostgreSQL is running, current time: {$result->fetchOne()}");
+            $currentTime = $result->fetchOne();
+            $io->success("PostgreSQL is running, current time: " . (is_scalar($currentTime) ? (string)$currentTime : 'unknown'));
             $connect->close();
 
             return Command::SUCCESS;

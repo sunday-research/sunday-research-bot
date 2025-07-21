@@ -27,9 +27,12 @@ final class SetBotCommandsDTO
         $botCommandsList = new BotCommandsList();
         foreach ($botCommands as $botCommand) {
             try {
+                if (empty($botCommand['command']) || empty($botCommand['description'])) {
+                    continue;
+                }
                 $botCommandsList[] = new BotCommand(
-                    $botCommand['command'] ?? null,
-                    $botCommand['description'] ?? null
+                    (string) $botCommand['command'],
+                    (string) $botCommand['description']
                 );
             } catch (TypeError $e) {
                 throw new BotCommandsListAddCommandException(

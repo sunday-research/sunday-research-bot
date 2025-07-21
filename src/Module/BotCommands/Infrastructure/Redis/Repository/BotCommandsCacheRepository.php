@@ -35,7 +35,7 @@ final readonly class BotCommandsCacheRepository
         $botCommands = $this->client->hgetall($cacheKey);
         $botCommandsList = new BotCommandsList();
         foreach ($botCommands as $command => $description) {
-            $botCommandsList[] = new BotCommand($command, $description);
+            $botCommandsList[] = new BotCommand($command, is_scalar($description) ? (string)$description : '');
         }
         return $botCommandsList;
     }

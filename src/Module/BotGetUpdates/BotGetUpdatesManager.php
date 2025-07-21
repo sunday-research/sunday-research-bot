@@ -47,7 +47,7 @@ final readonly class BotGetUpdatesManager
         }
 
         foreach ($result as $update) {
-            if (!$this->isTypeMessage($update->getUpdateType())) {
+            if ($update->getUpdateType() !== null && !$this->isTypeMessage($update->getUpdateType())) {
                 continue;
             }
 
@@ -70,6 +70,10 @@ final readonly class BotGetUpdatesManager
 
             foreach ($message->getEntities() as $entity) {
                 if ($entity->getType() !== 'bot_command') {
+                    continue;
+                }
+
+                if ($message->getCommand() === null) {
                     continue;
                 }
 

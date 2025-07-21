@@ -12,6 +12,9 @@ use RuntimeException;
 
 readonly class SendMessageClient
 {
+    /**
+     * @phpstan-ignore-next-line property.onlyWritten
+     */
     public function __construct(private Telegram $telegram)
     {
     }

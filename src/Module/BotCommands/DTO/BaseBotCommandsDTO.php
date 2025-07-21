@@ -34,6 +34,7 @@ class BaseBotCommandsDTO
      */
     public static function makeDTO(?array $scope = null): static
     {
+        /** @phpstan-ignore-next-line new.static */
         return (new static($scope));
     }
 

@@ -12,6 +12,7 @@ class SubscriberBuilder
     public static function build(DoctrineSubscriber $doctrineSubscriber): DomainSubscriber
     {
         return new DomainSubscriber(
+            /** @phpstan-ignore-next-line mixed.type */
             id: $doctrineSubscriber->getId()?->toString(),
             telegramUserId: $doctrineSubscriber->getTelegramUserId(),
             firstName: $doctrineSubscriber->getFirstName(),
