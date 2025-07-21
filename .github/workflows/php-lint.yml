@@ -55,7 +55,10 @@ jobs:
         run: composer install --prefer-dist --no-progress
 
       - name: Run PHP-CS-Fixer
-        run: ./vendor/bin/php-cs-fixer fix --dry-run --config=.php-cs-fixer.dist.php -v --show-progress=dots --stop-on-violation --using-cache=no
+        run: composer php-cs-fixer-diff
+
+      - name: Run PHPStan
+        run: composer phpstan-full-scan
 
       - name: Wait for PostgreSQL to be ready
         run: |
@@ -67,4 +70,4 @@ jobs:
         run: php bin/console doctrine:migrations:migrate --no-interaction --env=test
 
       - name: Run PHPUnit tests
-        run: ./vendor/bin/phpunit
+        run: composer phpunit
