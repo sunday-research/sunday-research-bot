@@ -1,0 +1,90 @@
+# @template-id exception_class
+# @scope php
+# @standards PSR-12, Symfony 7.0+, PHPStan 10
+# @php-version 8.2.9
+# @requirements strict_types=1, exception_hierarchy=1, context_support=1
+# @architecture clean_architecture, ddd, solid_principles
+# @module_structure src/Module/{ModuleName}/Exception
+# @description Exception class for module-specific errors
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Module\{ModuleName}\Exception;
+
+use Exception;
+
+/**
+ * Base exception for {ModuleName} module
+ * Provides common functionality for all module exceptions
+ */
+abstract class {ModuleName}Exception extends Exception
+{
+    public function __construct(
+        string $message = '',
+        int $code = 0,
+        ?Exception $previous = null,
+    ) {
+        parent::__construct($message, $code, $previous);
+    }
+}
+
+/**
+ * Specific exception for {ModuleName} operations
+ * Handles specific error scenarios in the module
+ */
+final class {ExceptionName} extends {ModuleName}Exception
+{
+    public function __construct(
+        string $message = '',
+        int $code = 0,
+        ?Exception $previous = null,
+    ) {
+        parent::__construct($message, $code, $previous);
+    }
+
+    /**
+     * Creates exception with context information
+     * 
+     * @param string $operation operation that caused the error
+     * @param array<string, mixed> $context error context
+     * @return self created exception
+     */
+    public static function withContext(string $operation, array $context): self
+    {
+        $message = sprintf(
+            'Failed to %s. Context: %s',
+            $operation,
+            json_encode($context, JSON_UNESCAPED_UNICODE)
+        );
+
+        return new self($message);
+    }
+
+    /**
+     * Creates exception for validation errors
+     * 
+     * @param string $field field that failed validation
+     * @param string $reason reason for validation failure
+     * @return self created exception
+     */
+    public static function validationError(string $field, string $reason): self
+    {
+        $message = sprintf('Validation failed for field "%s": %s', $field, $reason);
+        return new self($message);
+    }
+
+    /**
+     * Creates exception for not found errors
+     * 
+     * @param string $entity entity type that was not found
+     * @param string $identifier identifier used for search
+     * @return self created exception
+     */
+    public static function notFound(string $entity, string $identifier): self
+    {
+        $message = sprintf('%s not found with identifier: %s', $entity, $identifier);
+        return new self($message);
+    }
+} 

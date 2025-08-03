@@ -1,0 +1,42 @@
+# @template-id modern_php_class
+# @scope php
+# @standards PSR-12, Symfony 7.0+, PHPStan 10
+# @php-version 8.2.9
+# @requirements strict_types=1, readonly_classes=1, dependency_injection=1
+# @architecture clean_architecture, ddd, solid_principles
+# @module_structure src/Module/{ModuleName}/{Layer}
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Module\{ModuleName}\{Layer};
+
+use App\Module\{ModuleName}\{Dependency};
+use {ExternalDependency};
+
+/**
+ * {Description}
+ * 
+ * @todo: {TODO description if needed}
+ */
+readonly class {ClassName}
+{
+    public function __construct(
+        private {DependencyType} ${dependencyName},
+        // Add other dependencies as needed
+    ) {
+    }
+
+    /**
+     * {Method description}
+     * 
+     * @param {ParamType} ${paramName} {Parameter description}
+     * @return {ReturnType} {Return description}
+     * @throws {ExceptionType} {When exception is thrown}
+     */
+    public function {methodName}({ParamType} ${paramName}): {ReturnType}
+    {
+        // Implementation
+    }
+}

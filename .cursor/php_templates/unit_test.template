@@ -1,0 +1,118 @@
+# @template-id unit_test
+# @scope php
+# @standards PSR-12, Symfony 7.0+, PHPStan 10, PHPUnit 10.5+
+# @php-version 8.2.9
+# @requirements strict_types=1, unit_testing=1, mocking=1, aaa_pattern=1
+# @architecture clean_architecture, ddd, solid_principles
+# @module_structure tests/Module/{ModuleName}/{Layer}
+# @description Unit test template with AAA pattern
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\Module\{ModuleName}\{Layer};
+
+use App\Module\{ModuleName}\{Layer}\{ClassName};
+use App\Module\{ModuleName}\{Dependency};
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+
+/**
+ * Unit tests for {ClassName}
+ * Tests individual component behavior in isolation
+ */
+final class {ClassName}Test extends TestCase
+{
+    private {ClassName} ${className};
+    private {Dependency}&MockObject ${dependencyName};
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        
+        $this->{dependencyName} = $this->createMock({Dependency}::class);
+        $this->{className} = new {ClassName}($this->{dependencyName});
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_{expected_behavior}(): void
+    {
+        // Arrange
+        $input = 'test input';
+        $expectedOutput = 'expected output';
+
+        $this->{dependencyName}
+            ->expects($this->once())
+            ->method('{dependencyMethod}')
+            ->with($input)
+            ->willReturn($expectedOutput);
+
+        // Act
+        $result = $this->{className}->{methodName}($input);
+
+        // Assert
+        $this->assertSame($expectedOutput, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_throw_exception_when_{condition}(): void
+    {
+        // Arrange
+        $invalidInput = 'invalid input';
+
+        $this->{dependencyName}
+            ->expects($this->once())
+            ->method('{dependencyMethod}')
+            ->with($invalidInput)
+            ->willThrowException(new {ExceptionClass}('Error message'));
+
+        // Assert
+        $this->expectException({ExceptionClass}::class);
+        $this->expectExceptionMessage('Error message');
+
+        // Act
+        $this->{className}->{methodName}($invalidInput);
+    }
+
+    /**
+     * @return array<string, array<string, mixed>>
+     */
+    public function {methodName}_data_provider(): array
+    {
+        return [
+            'valid case 1' => [
+                'input' => 'valid input 1',
+                'expected' => 'expected result 1',
+            ],
+            'valid case 2' => [
+                'input' => 'valid input 2',
+                'expected' => 'expected result 2',
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider {methodName}_data_provider
+     */
+    public function it_should_{expected_behavior}_with_data_provider(string $input, string $expected): void
+    {
+        // Arrange
+        $this->{dependencyName}
+            ->expects($this->once())
+            ->method('{dependencyMethod}')
+            ->with($input)
+            ->willReturn($expected);
+
+        // Act
+        $result = $this->{className}->{methodName}($input);
+
+        // Assert
+        $this->assertSame($expected, $result);
+    }
+} 

@@ -1,0 +1,97 @@
+# @template-id integration_test
+# @scope php
+# @standards PSR-12, Symfony 7.0+, PHPStan 10, PHPUnit 10.5+
+# @php-version 8.2.9
+# @requirements strict_types=1, integration_testing=1, kernel_testcase=1, container=1
+# @architecture clean_architecture, ddd, solid_principles
+# @module_structure tests/Module/{ModuleName}/Integration
+# @description Integration test template with Symfony KernelTestCase
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\Module\{ModuleName}\Integration;
+
+use App\Module\{ModuleName}\{ModuleName}Manager;
+use App\Module\{ModuleName}\Service\{ServiceName};
+use App\Module\{ModuleName}\Infrastructure\{InfrastructureLayer}\Repository\{RepositoryName};
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Psr\Log\LoggerInterface;
+
+/**
+ * Integration tests for {ModuleName}Manager
+ * Tests component interactions and full workflow
+ */
+final class {ModuleName}ManagerIntegrationTest extends KernelTestCase
+{
+    private {ModuleName}Manager ${moduleName}Manager;
+    private {ServiceName} ${serviceName};
+    private {RepositoryName} ${repositoryName};
+    private LoggerInterface $logger;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        
+        $container = static::getContainer();
+        
+        $this->{serviceName} = $container->get({ServiceName}::class);
+        $this->{repositoryName} = $container->get({RepositoryName}::class);
+        $this->logger = $container->get(LoggerInterface::class);
+        
+        $this->{moduleName}Manager = new {ModuleName}Manager(
+            $this->{serviceName},
+            $this->logger,
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_execute_{operation}_end_to_end(): void
+    {
+        // Arrange
+        $inputData = 'test input data';
+
+        // Act
+        $result = $this->{moduleName}Manager->execute{Operation}($inputData);
+
+        // Assert
+        $this->assertNotNull($result);
+        
+        // Verify data was persisted
+        $savedEntity = $this->{repositoryName}->findBy(['field' => 'expected_value']);
+        $this->assertNotNull($savedEntity);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_handle_errors_gracefully(): void
+    {
+        // Arrange
+        $invalidInput = 'invalid input that will cause error';
+
+        // Act & Assert
+        $this->expectException(\Exception::class);
+        
+        $this->{moduleName}Manager->execute{Operation}($invalidInput);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_log_operations_correctly(): void
+    {
+        // Arrange
+        $inputData = 'test input for logging';
+
+        // Act
+        $this->{moduleName}Manager->execute{Operation}($inputData);
+
+        // Assert
+        // Verify logging behavior (you might need to mock logger or check logs)
+        $this->assertTrue(true); // Placeholder assertion
+    }
+} 

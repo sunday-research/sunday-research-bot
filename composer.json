@@ -25,6 +25,7 @@
         "doctrine/doctrine-bundle": "^2.12",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.2",
+        "dragonmantank/cron-expression": "^3.4",
         "longman/telegram-bot": "^0.82.0",
         "predis/predis": "^2.2",
         "ramsey/uuid-doctrine": "^2.1",
@@ -36,6 +37,7 @@
         "symfony/monolog-bundle": "^3.10",
         "symfony/redis-messenger": "7.0.*",
         "symfony/runtime": "7.0.*",
+        "symfony/scheduler": "7.0.*",
         "symfony/yaml": "7.0.*"
     },
     "config": {

@@ -1,0 +1,102 @@
+# @template-id value_object_class
+# @scope php
+# @standards PSR-12, Symfony 7.0+, PHPStan 10
+# @php-version 8.2.9
+# @requirements strict_types=1, readonly_classes=1, validation=1, equals_method=1
+# @architecture clean_architecture, ddd, solid_principles
+# @module_structure src/Module/{ModuleName}/ValueObject
+# @description Value Object for domain concepts
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Module\{ModuleName}\ValueObject;
+
+use App\Module\{ModuleName}\Exception\{ValidationException};
+
+/**
+ * Value Object for {DomainConcept}
+ * Immutable object representing a domain concept
+ */
+readonly class {ValueObjectName}
+{
+    public function __construct(
+        private string $value,
+    ) {
+        $this->validate($value);
+    }
+
+    public function getValue(): string
+    {
+        return $this->value;
+    }
+
+    /**
+     * Checks equality with another object
+     * 
+     * @param {ValueObjectName} $other object to compare with
+     * @return bool comparison result
+     */
+    public function equals({ValueObjectName} $other): bool
+    {
+        return $this->value === $other->value;
+    }
+
+    /**
+     * Validates the value
+     * 
+     * @param string $value value to validate
+     * @throws {ValidationException} if value is invalid
+     */
+    private function validate(string $value): void
+    {
+        if (empty(trim($value))) {
+            throw new {ValidationException}('Value cannot be empty');
+        }
+
+        // Add additional validation rules as needed
+        if (strlen($value) > 255) {
+            throw new {ValidationException}('Value cannot exceed 255 characters');
+        }
+    }
+
+    /**
+     * Creates object from string
+     * 
+     * @param string $value string value
+     * @return self created object
+     */
+    public static function fromString(string $value): self
+    {
+        return new self($value);
+    }
+
+    /**
+     * Creates object from array
+     * 
+     * @param array<string, mixed> $data array data
+     * @return self created object
+     */
+    public static function fromArray(array $data): self
+    {
+        return new self((string) $data['value']);
+    }
+
+    /**
+     * Converts to array
+     * 
+     * @return array<string, mixed> array representation
+     */
+    public function toArray(): array
+    {
+        return [
+            'value' => $this->value,
+        ];
+    }
+
+    public function __toString(): string
+    {
+        return $this->value;
+    }
+} 

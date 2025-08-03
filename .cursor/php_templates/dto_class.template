@@ -1,0 +1,87 @@
+# @template-id dto_class
+# @scope php
+# @standards PSR-12, Symfony 7.0+, PHPStan 10
+# @php-version 8.2.9
+# @requirements strict_types=1, readonly_classes=1, immutable_objects=1
+# @architecture clean_architecture, ddd, solid_principles
+# @module_structure src/Module/{ModuleName}/DTO
+# @description Data Transfer Object for data exchange between layers
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Module\{ModuleName}\DTO;
+
+/**
+ * DTO for {DomainConcept} data transfer
+ * Immutable object for passing data between layers
+ */
+readonly class {DTOName}DTO
+{
+    public function __construct(
+        private string $field1,
+        private int $field2,
+        private ?string $optionalField = null,
+    ) {
+    }
+
+    public function getField1(): string
+    {
+        return $this->field1;
+    }
+
+    public function getField2(): int
+    {
+        return $this->field2;
+    }
+
+    public function getOptionalField(): ?string
+    {
+        return $this->optionalField;
+    }
+
+    /**
+     * Creates DTO from array data
+     * 
+     * @param array<string, mixed> $data source data
+     * @return self created DTO
+     */
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            field1: (string) $data['field1'],
+            field2: (int) $data['field2'],
+            optionalField: isset($data['optional_field']) ? (string) $data['optional_field'] : null,
+        );
+    }
+
+    /**
+     * Converts DTO to array
+     * 
+     * @return array<string, mixed> array representation
+     */
+    public function toArray(): array
+    {
+        return [
+            'field1' => $this->field1,
+            'field2' => $this->field2,
+            'optional_field' => $this->optionalField,
+        ];
+    }
+
+    /**
+     * Creates DTO with updated field
+     * 
+     * @param string $field1 new field1 value
+     * @return self new DTO instance
+     */
+    public function withField1(string $field1): self
+    {
+        return new self(
+            field1: $field1,
+            field2: $this->field2,
+            optionalField: $this->optionalField,
+        );
+    }
+} 
