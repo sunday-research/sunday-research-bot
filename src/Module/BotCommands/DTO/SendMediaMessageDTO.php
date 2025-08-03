@@ -15,7 +15,8 @@ readonly class SendMediaMessageDTO
         private ?string $parseMode = null,
         private ?Keyboard $replyMarkup = null,
         private string $mediaType = 'photo' // 'photo', 'animation', or 'document'
-    ) {}
+    ) {
+    }
 
     public static function makeDTO(
         string $chatId,

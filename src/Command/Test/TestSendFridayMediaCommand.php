@@ -34,7 +34,8 @@ class TestSendFridayMediaCommand extends Command
 
         try {
             $message = new SendFridayMediaMessage(
-                chatId: $this->parameterBag->get('app.telegram.sunday_research_chat_id'),
+                chatId: is_string($this->parameterBag->get('app.telegram.sunday_research_chat_id'))
+                    ? $this->parameterBag->get('app.telegram.sunday_research_chat_id') : '',
                 media: 'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExanNzemdrcXo4OGI2d3h5eTJ3dzgwMHI0c3ZidnNmdHkzb2tkbnk0biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ijaZWxvcVbI5y/giphy.gif',
                 caption: 'Happy Sunday! (it\'s test)',
                 mediaType: 'animation'

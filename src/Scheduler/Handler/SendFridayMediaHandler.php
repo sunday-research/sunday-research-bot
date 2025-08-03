@@ -12,7 +12,9 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 readonly class SendFridayMediaHandler
 {
-    public function __construct(private SendMessageClient $sendMessageClient) {}
+    public function __construct(private SendMessageClient $sendMessageClient)
+    {
+    }
 
     public function __invoke(SendFridayMediaMessage $message): void
     {
