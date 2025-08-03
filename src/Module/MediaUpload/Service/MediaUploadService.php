@@ -6,9 +6,10 @@ namespace App\Module\MediaUpload\Service;
 
 use App\Module\MediaUpload\DTO\MediaFileInfoDTO;
 use App\Module\MediaUpload\DTO\UploadMediaDTO;
+use App\Module\MediaUpload\Enum\MediaTypeEnum;
 use App\Module\MediaUpload\Infrastructure\Redis\Repository\MediaUploadCacheRepository;
 use App\Module\MediaUpload\Infrastructure\Telegram\MediaUploadClient;
-use App\Module\MediaUpload\ValueObject\MediaFileHash;
+use App\Module\MediaUpload\ValueObject\MediaFileHashVO;
 
 final readonly class MediaUploadService
 {
@@ -23,7 +24,7 @@ final readonly class MediaUploadService
      */
     public function uploadMediaWithCache(UploadMediaDTO $uploadMediaDTO): MediaFileInfoDTO
     {
-        $fileHash = MediaFileHash::fromFilePath($uploadMediaDTO->getFilePath());
+        $fileHash = MediaFileHashVO::fromFilePath($uploadMediaDTO->getFilePath());
 
         // Проверяем кэш
         if ($this->cacheRepository->isMediaFileCached($fileHash)) {
@@ -49,7 +50,7 @@ final readonly class MediaUploadService
     {
         $uploadDTO = UploadMediaDTO::makeDTO(
             filePath: $filePath,
-            mediaType: \App\Module\MediaUpload\Enum\MediaTypeEnum::from($mediaType)
+            mediaType: MediaTypeEnum::from($mediaType)
         );
 
         $fileInfo = $this->uploadMediaWithCache($uploadDTO);
@@ -61,7 +62,7 @@ final readonly class MediaUploadService
      */
     public function clearCache(string $filePath): void
     {
-        $fileHash = MediaFileHash::fromFilePath($filePath);
+        $fileHash = MediaFileHashVO::fromFilePath($filePath);
         $this->cacheRepository->deleteMediaFileInfo($fileHash);
     }
-} 
+}

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Module\MediaUpload\Exception;
 
-use Exception;
+use RuntimeException;
 
-abstract class MediaUploadException extends Exception
-{
-} 
+abstract class MediaUploadException extends RuntimeException {}

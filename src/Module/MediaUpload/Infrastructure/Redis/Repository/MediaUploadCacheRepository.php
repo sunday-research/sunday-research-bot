@@ -6,7 +6,7 @@ namespace App\Module\MediaUpload\Infrastructure\Redis\Repository;
 
 use App\Module\MediaUpload\DTO\MediaFileInfoDTO;
 use App\Module\MediaUpload\Enum\MediaTypeEnum;
-use App\Module\MediaUpload\ValueObject\MediaFileHash;
+use App\Module\MediaUpload\ValueObject\MediaFileHashVO;
 use Predis\ClientInterface;
 
 final readonly class MediaUploadCacheRepository
@@ -18,13 +18,13 @@ final readonly class MediaUploadCacheRepository
     {
     }
 
-    public function isMediaFileCached(MediaFileHash $fileHash): bool
+    public function isMediaFileCached(MediaFileHashVO $fileHash): bool
     {
         $cacheKey = $this->getCacheKey($fileHash);
         return (bool)$this->client->exists($cacheKey);
     }
 
-    public function getMediaFileInfo(MediaFileHash $fileHash): ?MediaFileInfoDTO
+    public function getMediaFileInfo(MediaFileHashVO $fileHash): ?MediaFileInfoDTO
     {
         $cacheKey = $this->getCacheKey($fileHash);
         $fileInfo = $this->client->hgetall($cacheKey);
@@ -42,7 +42,7 @@ final readonly class MediaUploadCacheRepository
         );
     }
 
-    public function setMediaFileInfo(MediaFileHash $fileHash, MediaFileInfoDTO $fileInfo, ?int $ttlInSeconds = null): bool
+    public function setMediaFileInfo(MediaFileHashVO $fileHash, MediaFileInfoDTO $fileInfo, ?int $ttlInSeconds = null): bool
     {
         if (null === $ttlInSeconds) {
             $ttlInSeconds = self::CACHE_TTL_IN_SECONDS;
@@ -72,14 +72,14 @@ final readonly class MediaUploadCacheRepository
         return false;
     }
 
-    public function deleteMediaFileInfo(MediaFileHash $fileHash): void
+    public function deleteMediaFileInfo(MediaFileHashVO $fileHash): void
     {
         $cacheKey = $this->getCacheKey($fileHash);
         $this->client->del($cacheKey);
     }
 
-    private function getCacheKey(MediaFileHash $fileHash): string
+    private function getCacheKey(MediaFileHashVO $fileHash): string
     {
         return sprintf('%s_%s', self::CACHE_KEY_PREFIX, $fileHash->getHash());
     }
-} 
+}

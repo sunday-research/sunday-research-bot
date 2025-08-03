@@ -65,4 +65,4 @@ readonly class MediaFileInfoDTO
             'file_path' => $this->getFilePath(),
         ];
     }
-} 
+}

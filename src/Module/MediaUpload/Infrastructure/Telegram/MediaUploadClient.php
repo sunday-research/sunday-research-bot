@@ -69,4 +69,4 @@ final readonly class MediaUploadClient
             filePath: $file->getFilePath()
         );
     }
-} 
+}

@@ -42,4 +42,4 @@ enum MediaTypeEnum: string
             self::STICKER => 'sticker',
         };
     }
-} 
+}

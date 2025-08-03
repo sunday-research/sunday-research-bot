@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\MediaUpload\ValueObject;
 
-final readonly class MediaFileHash
+final readonly class MediaFileHashVO
 {
     private function __construct(private string $hash)
     {
@@ -34,4 +34,4 @@ final readonly class MediaFileHash
     {
         return $this->hash;
     }
-} 
+}

@@ -19,7 +19,7 @@ use App\Module\{ModuleName}\Exception\{ValidationException};
  * Value Object for {DomainConcept}
  * Immutable object representing a domain concept
  */
-readonly class {ValueObjectName}ValueObject
+readonly class {ValueObjectName}VO
 {
     public function __construct(
         private string $value,

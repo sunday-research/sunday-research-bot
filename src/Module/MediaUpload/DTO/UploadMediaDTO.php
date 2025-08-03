@@ -57,4 +57,4 @@ readonly class UploadMediaDTO
             'parse_mode' => $this->getParseMode(),
         ];
     }
-} 
+}

@@ -10,4 +10,4 @@ class MediaFileNotFoundException extends MediaUploadException
     {
         parent::__construct(sprintf('Media file not found: %s', $filePath));
     }
-} 
+}
