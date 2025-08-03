@@ -99,4 +99,4 @@ readonly class {ValueObjectName}
     {
         return $this->value;
     }
-} 
+}
