@@ -94,4 +94,4 @@ final class {ModuleName}ManagerIntegrationTest extends KernelTestCase
         // Verify logging behavior (you might need to mock logger or check logs)
         $this->assertTrue(true); // Placeholder assertion
     }
-} 
+}

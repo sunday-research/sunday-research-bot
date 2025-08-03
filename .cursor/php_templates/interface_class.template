@@ -64,4 +64,4 @@ interface {InterfaceName}Interface
      * @throws {ExceptionName} if deletion fails
      */
     public function delete(string $id): void;
-} 
+}

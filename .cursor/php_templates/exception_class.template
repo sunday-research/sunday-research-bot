@@ -19,16 +19,7 @@ use Exception;
  * Base exception for {ModuleName} module
  * Provides common functionality for all module exceptions
  */
-abstract class {ModuleName}Exception extends Exception
-{
-    public function __construct(
-        string $message = '',
-        int $code = 0,
-        ?Exception $previous = null,
-    ) {
-        parent::__construct($message, $code, $previous);
-    }
-}
+abstract class {ModuleName}Exception extends Exception {}
 
 /**
  * Specific exception for {ModuleName} operations
@@ -36,14 +27,6 @@ abstract class {ModuleName}Exception extends Exception
  */
 final class {ExceptionName} extends {ModuleName}Exception
 {
-    public function __construct(
-        string $message = '',
-        int $code = 0,
-        ?Exception $previous = null,
-    ) {
-        parent::__construct($message, $code, $previous);
-    }
-
     /**
      * Creates exception with context information
      * 
@@ -87,4 +70,4 @@ final class {ExceptionName} extends {ModuleName}Exception
         $message = sprintf('%s not found with identifier: %s', $entity, $identifier);
         return new self($message);
     }
-} 
+}

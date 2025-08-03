@@ -61,4 +61,4 @@ readonly class {ModuleName}Manager
             throw $e;
         }
     }
-} 
+}

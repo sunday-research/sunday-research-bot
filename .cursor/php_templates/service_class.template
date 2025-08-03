@@ -74,4 +74,4 @@ readonly class {ServiceName}
             throw new {ValidationException}('Required field cannot be empty');
         }
     }
-} 
+}

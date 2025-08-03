@@ -83,4 +83,4 @@ readonly class {RepositoryName}
             $models
         );
     }
-} 
+}

@@ -88,4 +88,4 @@ enum {EnumName}Enum: string
         }
         return $choices;
     }
-} 
+}

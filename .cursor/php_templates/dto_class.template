@@ -84,4 +84,4 @@ readonly class {DTOName}DTO
             optionalField: $this->optionalField,
         );
     }
-} 
+}
