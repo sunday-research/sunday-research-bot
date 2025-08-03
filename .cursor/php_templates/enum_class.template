@@ -1,0 +1,91 @@
+# @template-id enum_class
+# @scope php
+# @standards PSR-12, Symfony 7.0+, PHPStan 10
+# @php-version 8.2.9
+# @requirements strict_types=1, php_enum=1, value_objects=1
+# @architecture clean_architecture, ddd, solid_principles
+# @module_structure src/Module/{ModuleName}/Enum
+# @description PHP 8.1+ Enum template
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Module\{ModuleName}\Enum;
+
+/**
+ * Enum for {DomainConcept} states/types
+ * Represents fixed set of values for {DomainConcept}
+ */
+enum {EnumName}Enum: string
+{
+    case VALUE_1 = 'value_1';
+    case VALUE_2 = 'value_2';
+    case VALUE_3 = 'value_3';
+
+    /**
+     * Gets display name for the enum value
+     * 
+     * @return string human-readable name
+     */
+    public function getDisplayName(): string
+    {
+        return match ($this) {
+            self::VALUE_1 => 'Value 1',
+            self::VALUE_2 => 'Value 2',
+            self::VALUE_3 => 'Value 3',
+        };
+    }
+
+    /**
+     * Gets description for the enum value
+     * 
+     * @return string detailed description
+     */
+    public function getDescription(): string
+    {
+        return match ($this) {
+            self::VALUE_1 => 'Description for value 1',
+            self::VALUE_2 => 'Description for value 2',
+            self::VALUE_3 => 'Description for value 3',
+        };
+    }
+
+    /**
+     * Checks if enum value is valid for specific operation
+     * 
+     * @return bool whether value is valid
+     */
+    public function isValidForOperation(): bool
+    {
+        return match ($this) {
+            self::VALUE_1, self::VALUE_2 => true,
+            self::VALUE_3 => false,
+        };
+    }
+
+    /**
+     * Creates enum from string value
+     * 
+     * @param string $value string value
+     * @return self|null created enum or null if invalid
+     */
+    public static function tryFromString(string $value): ?self
+    {
+        return self::tryFrom($value);
+    }
+
+    /**
+     * Gets all enum values as array
+     * 
+     * @return array<string, string> array of values with display names
+     */
+    public static function getChoices(): array
+    {
+        $choices = [];
+        foreach (self::cases() as $case) {
+            $choices[$case->getDisplayName()] = $case->value;
+        }
+        return $choices;
+    }
+} 

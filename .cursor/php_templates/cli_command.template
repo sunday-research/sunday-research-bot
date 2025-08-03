@@ -1,0 +1,95 @@
+# @template-id cli_command
+# @scope php
+# @standards PSR-12, Symfony 7.0+, PHPStan 10
+# @php-version 8.2.9
+# @requirements strict_types=1, symfony_console=1, dependency_injection=1
+# @architecture clean_architecture, ddd, solid_principles
+# @module_structure src/Command
+# @description Symfony Console Command template
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Command;
+
+use App\Module\{ModuleName}\{ModuleName}Manager;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+
+/**
+ * CLI command for {DomainConcept} operations
+ * Provides command-line interface for {DomainConcept} management
+ */
+#[AsCommand(
+    name: 'app:{command-name}',
+    description: '{Command description}',
+)]
+final class {CommandName}Command extends Command
+{
+    public function __construct(
+        private {ModuleName}Manager ${moduleName}Manager,
+    ) {
+        parent::__construct();
+    }
+
+    protected function configure(): void
+    {
+        $this
+            ->addOption(
+                'option1',
+                'o',
+                InputOption::VALUE_REQUIRED,
+                '{Option description}',
+                'default_value'
+            )
+            ->addOption(
+                'option2',
+                null,
+                InputOption::VALUE_NONE,
+                '{Flag option description}'
+            )
+            ->setHelp('{Help text for the command}');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $io = new SymfonyStyle($input, $output);
+        
+        try {
+            $option1 = $input->getOption('option1');
+            $option2 = $input->getOption('option2');
+
+            $io->title('{Command Title}');
+            $io->text('Starting {operation}...');
+
+            // Execute business logic
+            $result = $this->{moduleName}Manager->execute{Operation}($option1);
+
+            $io->success('{Operation} completed successfully');
+            $io->table(
+                ['Field', 'Value'],
+                [
+                    ['Result', $result],
+                    ['Option1', $option1],
+                    ['Option2', $option2 ? 'Yes' : 'No'],
+                ]
+            );
+
+            return Command::SUCCESS;
+        } catch (\Exception $e) {
+            $io->error('Failed to execute {operation}: ' . $e->getMessage());
+            
+            if ($io->isVerbose()) {
+                $io->text('Stack trace:');
+                $io->text($e->getTraceAsString());
+            }
+
+            return Command::FAILURE;
+        }
+    }
+} 

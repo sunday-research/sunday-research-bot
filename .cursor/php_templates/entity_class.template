@@ -1,0 +1,115 @@
+# @template-id entity_class
+# @scope php
+# @standards PSR-12, Symfony 7.0+, PHPStan 10
+# @php-version 8.2.9
+# @requirements strict_types=1, readonly_classes=1, uuid=1, timestamps=1
+# @architecture clean_architecture, ddd, solid_principles
+# @module_structure src/Module/{ModuleName}/Entity
+# @description Domain Entity representing business objects
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Module\{ModuleName}\Entity;
+
+use App\Module\{ModuleName}\ValueObject\{ValueObjectName};
+use Ramsey\Uuid\UuidInterface;
+
+/**
+ * Domain Entity for {DomainConcept}
+ * Represents a business object with identity and lifecycle
+ */
+readonly class {EntityName}
+{
+    public function __construct(
+        private UuidInterface $id,
+        private {ValueObjectName} ${valueObjectName},
+        private \DateTimeImmutable $createdAt,
+        private \DateTimeImmutable $updatedAt,
+    ) {
+    }
+
+    public function getId(): UuidInterface
+    {
+        return $this->id;
+    }
+
+    public function get{ValueObjectName}(): {ValueObjectName}
+    {
+        return $this->{valueObjectName};
+    }
+
+    public function getCreatedAt(): \DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): \DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Creates entity from DTO
+     * 
+     * @param {DTOName} $dto data for creation
+     * @return self created entity
+     */
+    public static function fromDTO({DTOName} $dto): self
+    {
+        return new self(
+            id: \Ramsey\Uuid\Uuid::uuid4(),
+            {valueObjectName}: new {ValueObjectName}($dto->getField1()),
+            createdAt: new \DateTimeImmutable(),
+            updatedAt: new \DateTimeImmutable(),
+        );
+    }
+
+    /**
+     * Creates entity from model
+     * 
+     * @param {ModelName} $model infrastructure model
+     * @return self created entity
+     */
+    public static function fromModel({ModelName} $model): self
+    {
+        return new self(
+            id: $model->getId(),
+            {valueObjectName}: new {ValueObjectName}($model->getValue()),
+            createdAt: $model->getCreatedAt(),
+            updatedAt: $model->getUpdatedAt(),
+        );
+    }
+
+    /**
+     * Updates entity with new value
+     * 
+     * @param {ValueObjectName} ${valueObjectName} new value
+     * @return self updated entity
+     */
+    public function update({ValueObjectName} ${valueObjectName}): self
+    {
+        return new self(
+            id: $this->id,
+            {valueObjectName}: ${valueObjectName},
+            createdAt: $this->createdAt,
+            updatedAt: new \DateTimeImmutable(),
+        );
+    }
+
+    /**
+     * Converts to array
+     * 
+     * @return array<string, mixed> array representation
+     */
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id->toString(),
+            'value' => $this->{valueObjectName}->getValue(),
+            'created_at' => $this->createdAt->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updatedAt->format('Y-m-d H:i:s'),
+        ];
+    }
+} 

@@ -1,0 +1,67 @@
+# @template-id interface_class
+# @scope php
+# @standards PSR-12, Symfony 7.0+, PHPStan 10
+# @php-version 8.2.9
+# @requirements strict_types=1, contract_design=1, dependency_inversion=1
+# @architecture clean_architecture, ddd, solid_principles
+# @module_structure src/Module/{ModuleName}/Contract
+# @description Interface/Contract for dependency inversion
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Module\{ModuleName}\Contract;
+
+use App\Module\{ModuleName}\ValueObject\{ValueObjectName};
+use App\Module\{ModuleName}\DTO\{DTOName};
+
+/**
+ * Interface for {DomainConcept} operations
+ * Defines contract for {DomainConcept} related functionality
+ */
+interface {InterfaceName}Interface
+{
+    /**
+     * Creates new {DomainConcept}
+     * 
+     * @param {DTOName} $dto data for creation
+     * @return {ValueObjectName} created object
+     * @throws {ExceptionName} if creation fails
+     */
+    public function create{Entity}({DTOName} $dto): {ValueObjectName};
+
+    /**
+     * Finds {DomainConcept} by ID
+     * 
+     * @param string $id identifier
+     * @return {ValueObjectName}|null found object or null
+     */
+    public function findById(string $id): ?{ValueObjectName};
+
+    /**
+     * Finds {DomainConcept} by criteria
+     * 
+     * @param array<string, mixed> $criteria search criteria
+     * @return {ValueObjectName}|null found object or null
+     */
+    public function findBy(array $criteria): ?{ValueObjectName};
+
+    /**
+     * Updates {DomainConcept}
+     * 
+     * @param string $id identifier
+     * @param {DTOName} $dto update data
+     * @return {ValueObjectName} updated object
+     * @throws {ExceptionName} if update fails
+     */
+    public function update(string $id, {DTOName} $dto): {ValueObjectName};
+
+    /**
+     * Deletes {DomainConcept}
+     * 
+     * @param string $id identifier
+     * @throws {ExceptionName} if deletion fails
+     */
+    public function delete(string $id): void;
+} 

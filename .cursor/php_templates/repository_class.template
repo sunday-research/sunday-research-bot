@@ -1,0 +1,86 @@
+# @template-id repository_class
+# @scope php
+# @standards PSR-12, Symfony 7.0+, PHPStan 10
+# @php-version 8.2.9
+# @requirements strict_types=1, readonly_classes=1, dependency_injection=1, doctrine_orm=1
+# @architecture clean_architecture, ddd, solid_principles
+# @module_structure src/Module/{ModuleName}/Infrastructure/{InfrastructureLayer}/Repository
+# @description Repository class for data persistence
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Module\{ModuleName}\Infrastructure\{InfrastructureLayer}\Repository;
+
+use App\Module\{ModuleName}\Infrastructure\{InfrastructureLayer}\Model\{ModelName};
+use App\Module\{ModuleName}\ValueObject\{ValueObjectName};
+use Doctrine\ORM\EntityManagerInterface;
+
+/**
+ * Repository for {DomainConcept} persistence in {InfrastructureLayer}
+ * Handles data access and mapping between domain and infrastructure
+ */
+readonly class {RepositoryName}
+{
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+    ) {
+    }
+
+    /**
+     * Saves {DomainConcept} to storage
+     * 
+     * @param {ValueObjectName} ${entityName} object to save
+     */
+    public function save({ValueObjectName} ${entityName}): void
+    {
+        $model = {ModelName}::fromDomain($entityName);
+        $this->entityManager->persist($model);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Finds {DomainConcept} by ID
+     * 
+     * @param string $id identifier
+     * @return {ValueObjectName}|null found object or null
+     */
+    public function findById(string $id): ?{ValueObjectName}
+    {
+        $model = $this->entityManager->find({ModelName}::class, $id);
+        
+        return $model ? {ValueObjectName}::fromModel($model) : null;
+    }
+
+    /**
+     * Finds {DomainConcept} by criteria
+     * 
+     * @param array<string, mixed> $criteria search criteria
+     * @return {ValueObjectName}|null found object or null
+     */
+    public function findBy(array $criteria): ?{ValueObjectName}
+    {
+        $model = $this->entityManager->getRepository({ModelName}::class)
+            ->findOneBy($criteria);
+
+        return $model ? {ValueObjectName}::fromModel($model) : null;
+    }
+
+    /**
+     * Finds multiple {DomainConcept} by criteria
+     * 
+     * @param array<string, mixed> $criteria search criteria
+     * @return array<int, {ValueObjectName}> found objects
+     */
+    public function findAllBy(array $criteria): array
+    {
+        $models = $this->entityManager->getRepository({ModelName}::class)
+            ->findBy($criteria);
+
+        return array_map(
+            fn({ModelName} $model) => {ValueObjectName}::fromModel($model),
+            $models
+        );
+    }
+} 

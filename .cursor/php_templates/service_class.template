@@ -1,0 +1,77 @@
+# @template-id service_class
+# @scope php
+# @standards PSR-12, Symfony 7.0+, PHPStan 10
+# @php-version 8.2.9
+# @requirements strict_types=1, readonly_classes=1, dependency_injection=1, validation=1
+# @architecture clean_architecture, ddd, solid_principles
+# @module_structure src/Module/{ModuleName}/Service
+# @description Business logic service class
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Module\{ModuleName}\Service;
+
+use App\Module\{ModuleName}\Infrastructure\{InfrastructureLayer}\Repository\{RepositoryName};
+use App\Module\{ModuleName}\DTO\{DTOName};
+use App\Module\{ModuleName}\ValueObject\{ValueObjectName};
+use App\Module\{ModuleName}\Exception\{ExceptionName};
+
+/**
+ * Service for {DomainConcept} business operations
+ * Handles business logic and coordinates with repositories
+ */
+readonly class {ServiceName}
+{
+    public function __construct(
+        private {RepositoryName} ${repositoryName},
+    ) {
+    }
+
+    /**
+     * Creates new {DomainConcept}
+     * 
+     * @param {DTOName} $dto data for creation
+     * @return {ValueObjectName} created object
+     * @throws {ExceptionName} if creation fails
+     */
+    public function create{Entity}({DTOName} $dto): {ValueObjectName}
+    {
+        // Validate input data
+        $this->validate{Entity}Data($dto);
+
+        // Create domain object
+        $entity = {EntityName}::fromDTO($dto);
+
+        // Persist through repository
+        $this->{repositoryName}->save($entity);
+
+        return $entity;
+    }
+
+    /**
+     * Finds {DomainConcept} by criteria
+     * 
+     * @param array<string, mixed> $criteria search criteria
+     * @return {ValueObjectName}|null found object or null
+     */
+    public function find{Entity}By(array $criteria): ?{ValueObjectName}
+    {
+        return $this->{repositoryName}->findBy($criteria);
+    }
+
+    /**
+     * Validates data for {DomainConcept} creation
+     * 
+     * @param {DTOName} $dto data to validate
+     * @throws {ValidationException} if data is invalid
+     */
+    private function validate{Entity}Data({DTOName} $dto): void
+    {
+        // Implement validation logic
+        if (empty($dto->getRequiredField())) {
+            throw new {ValidationException}('Required field cannot be empty');
+        }
+    }
+} 

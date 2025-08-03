@@ -1,0 +1,64 @@
+# @template-id manager_class
+# @scope php
+# @standards PSR-12, Symfony 7.0+, PHPStan 10
+# @php-version 8.2.9
+# @requirements strict_types=1, readonly_classes=1, dependency_injection=1, logging=1
+# @architecture clean_architecture, ddd, solid_principles
+# @module_structure src/Module/{ModuleName}
+# @description High-level business logic manager class
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Module\{ModuleName};
+
+use App\Module\{ModuleName}\Service\{ServiceName};
+use Psr\Log\LoggerInterface;
+
+/**
+ * High-level manager for {DomainConcept} operations
+ * Orchestrates business logic and coordinates between services
+ */
+readonly class {ModuleName}Manager
+{
+    public function __construct(
+        private {ServiceName} ${serviceName},
+        private LoggerInterface $logger,
+    ) {
+    }
+
+    /**
+     * Executes main business operation
+     * 
+     * @param {InputType} ${inputName} {Input description}
+     * @return {OutputType} {Output description}
+     * @throws {ExceptionType} {When operation fails}
+     */
+    public function execute{Operation}({InputType} ${inputName}): {OutputType}
+    {
+        try {
+            $this->logger->info('Starting {operation}', [
+                'input' => $inputName,
+                'context' => 'additional info'
+            ]);
+
+            // Execute business logic through services
+            $result = $this->{serviceName}->perform{Operation}($inputName);
+
+            $this->logger->info('{Operation} completed successfully', [
+                'result' => $result,
+                'input' => $inputName
+            ]);
+
+            return $result;
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to execute {operation}', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'input' => $inputName
+            ]);
+            throw $e;
+        }
+    }
+} 
