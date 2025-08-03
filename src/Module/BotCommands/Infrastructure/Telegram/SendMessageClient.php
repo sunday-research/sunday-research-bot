@@ -63,18 +63,26 @@ readonly class SendMessageClient
             if ($dto->getReplyMarkup()) {
                 $params['reply_markup'] = $dto->getReplyMarkup();
             }
+
+            // Если это file_id, используем его напрямую
+            if ($dto->isFileId()) {
+                $mediaField = $dto->getMediaType();
+                $params[$mediaField] = $dto->getMedia();
+            } else {
+                // Если это путь к файлу, кодируем его
+                $mediaField = $dto->getMediaType();
+                $params[$mediaField] = Request::encodeFile($dto->getMedia());
+            }
+
             switch ($dto->getMediaType()) {
                 case 'animation':
-                    $params['animation'] = $dto->getMedia();
                     $response = Request::sendAnimation($params);
                     break;
                 case 'document':
-                    $params['document'] = $dto->getMedia();
                     $response = Request::sendDocument($params);
                     break;
                 case 'photo':
                 default:
-                    $params['photo'] = $dto->getMedia();
                     $response = Request::sendPhoto($params);
                     break;
             }

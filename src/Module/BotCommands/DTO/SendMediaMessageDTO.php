@@ -59,6 +59,23 @@ readonly class SendMediaMessageDTO
         return $this->mediaType;
     }
 
+    public function isFileId(): bool
+    {
+        // Проверяем, является ли media внешней ссылкой
+        if (str_starts_with($this->media, 'http://') || str_starts_with($this->media, 'https://')) {
+            return false; // Внешняя ссылка - не file_id
+        }
+
+        // Проверяем, является ли media file_id (обычно начинается с определенных префиксов)
+        // Telegram file_id обычно содержит специальные символы и имеет определенную структуру
+        if (preg_match('/^[A-Za-z0-9_-]{20,}$/', $this->media)) {
+            return true; // Похоже на file_id
+        }
+
+        // Если это не внешняя ссылка и не похоже на file_id, то это путь к файлу
+        return false;
+    }
+
     /**
      * @return array<string, mixed>
      */

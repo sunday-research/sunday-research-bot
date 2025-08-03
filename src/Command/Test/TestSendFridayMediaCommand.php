@@ -33,15 +33,28 @@ class TestSendFridayMediaCommand extends Command
         $io->info('Testing Friday media message sending...');
 
         try {
+            // Тестируем с локальным файлом
+            $message = new SendFridayMediaMessage(
+                chatId: is_string($this->parameterBag->get('app.telegram.sunday_research_chat_id'))
+                    ? $this->parameterBag->get('app.telegram.sunday_research_chat_id') : '',
+                media: 'assets/media/images/test-image.jpg', // Используем тестовый файл
+                caption: 'Happy Sunday! (it\'s test with local file)',
+                mediaType: 'photo'
+            );
+            $this->handler->__invoke($message);
+            $io->success('Friday media message with local file sent successfully!');
+
+            // Тестируем с внешней ссылкой
             $message = new SendFridayMediaMessage(
                 chatId: is_string($this->parameterBag->get('app.telegram.sunday_research_chat_id'))
                     ? $this->parameterBag->get('app.telegram.sunday_research_chat_id') : '',
                 media: 'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExanNzemdrcXo4OGI2d3h5eTJ3dzgwMHI0c3ZidnNmdHkzb2tkbnk0biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ijaZWxvcVbI5y/giphy.gif',
-                caption: 'Happy Sunday! (it\'s test)',
+                caption: 'Happy Sunday! (it\'s test with external link)',
                 mediaType: 'animation'
             );
             $this->handler->__invoke($message);
-            $io->success('Friday media message sent successfully!');
+            $io->success('Friday media message with external link sent successfully!');
+
             return Command::SUCCESS;
         } catch (\Throwable $e) {
             $io->error('Failed to send Friday media message: ' . $e->getMessage());

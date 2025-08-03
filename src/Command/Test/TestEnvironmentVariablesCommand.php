@@ -10,6 +10,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * @deprecated Используй ./bin/console debug:dotenv вместо этой команды
+ */
 #[AsCommand(
     name: 'test:environment-variables',
     description: 'Выводит на экран значения переменных окружения, используемых в приложении',
