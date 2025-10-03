@@ -23,6 +23,150 @@ use Psr\Log\LoggerInterface;
 
 final readonly class BotGetUpdatesManager
 {
+    private const UPDATE_COMMAND_STRUCTURE = <<<JSON
+{
+  "update": {
+    "bot_username": "sunday_research_bot",
+    "raw_data": {
+      "update_id": 476801087,
+      "message": {
+        "message_id": 155,
+        "from": {
+          "id": 227974324,
+          "is_bot": false,
+          "first_name": "Владислав",
+          "last_name": "Субботин",
+          "username": "subbotinv",
+          "language_code": "ru",
+          "is_premium": true
+        },
+        "chat": {
+          "id": -4064339494,
+          "title": "SR dev",
+          "type": "group",
+          "all_members_are_administrators": true,
+          "accepted_gift_types": {
+            "unlimited_gifts": false,
+            "limited_gifts": false,
+            "unique_gifts": false,
+            "premium_subscription": false
+          }
+        },
+        "date": 1751623420,
+        "text": "/issue@sunday_research_bot",
+        "entities": [
+          {
+            "offset": 0,
+            "length": 26,
+            "type": "bot_command"
+          }
+        ]
+      }
+    },
+    "fields": {
+      "update_id": 476801087,
+      "message": {
+        "message_id": 155,
+        "from": {
+          "id": 227974324,
+          "is_bot": false,
+          "first_name": "Владислав",
+          "last_name": "Субботин",
+          "username": "subbotinv",
+          "language_code": "ru",
+          "is_premium": true
+        },
+        "chat": {
+          "id": -4064339494,
+          "title": "SR dev",
+          "type": "group",
+          "all_members_are_administrators": true,
+          "accepted_gift_types": {
+            "unlimited_gifts": false,
+            "limited_gifts": false,
+            "unique_gifts": false,
+            "premium_subscription": false
+          }
+        },
+        "date": 1751623420,
+        "text": "/issue@sunday_research_bot",
+        "entities": [
+          {
+            "offset": 0,
+            "length": 26,
+            "type": "bot_command"
+          }
+        ]
+      }
+    }
+  }
+}
+JSON;
+    private const UPDATE_TEXT_STRUCTURE = <<<JSON
+{
+  "update": {
+    "bot_username": "sunday_research_bot",
+    "raw_data": {
+      "update_id": 476801086,
+      "message": {
+        "message_id": 154,
+        "from": {
+          "id": 227974324,
+          "is_bot": false,
+          "first_name": "Владислав",
+          "last_name": "Субботин",
+          "username": "subbotinv",
+          "language_code": "ru",
+          "is_premium": true
+        },
+        "chat": {
+          "id": -4064339494,
+          "title": "SR dev",
+          "type": "group",
+          "all_members_are_administrators": true,
+          "accepted_gift_types": {
+            "unlimited_gifts": false,
+            "limited_gifts": false,
+            "unique_gifts": false,
+            "premium_subscription": false
+          }
+        },
+        "date": 1751623367,
+        "text": "тест"
+      }
+    },
+    "fields": {
+      "update_id": 476801086,
+      "message": {
+        "message_id": 154,
+        "from": {
+          "id": 227974324,
+          "is_bot": false,
+          "first_name": "Владислав",
+          "last_name": "Субботин",
+          "username": "subbotinv",
+          "language_code": "ru",
+          "is_premium": true
+        },
+        "chat": {
+          "id": -4064339494,
+          "title": "SR dev",
+          "type": "group",
+          "all_members_are_administrators": true,
+          "accepted_gift_types": {
+            "unlimited_gifts": false,
+            "limited_gifts": false,
+            "unique_gifts": false,
+            "premium_subscription": false
+          }
+        },
+        "date": 1751623367,
+        "text": "тест"
+      }
+    }
+  }
+}
+JSON;
     public function __construct(
         private BotGetUpdatesService $botGetUpdatesService,
         private LoggerInterface $logger,
