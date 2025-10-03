@@ -28,4 +28,10 @@ class SubscriberMessageRepository extends ServiceEntityRepository
         $this->getEntityManager()->persist($subscriberMessage);
         $this->getEntityManager()->flush();
     }
+
+    public function update(SubscriberMessage $subscriberMessage): void
+    {
+        $this->getEntityManager()->persist($subscriberMessage);
+        $this->getEntityManager()->flush();
+    }
 }

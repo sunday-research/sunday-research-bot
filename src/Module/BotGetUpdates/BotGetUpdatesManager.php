@@ -167,6 +167,74 @@ JSON;
   }
 }
 JSON;
+    private const UPDATE_EDITED_MESSAGE_STRUCTURE = <<<JSON
+{
+  "update": {
+    "bot_username": "sunday_research_bot",
+    "raw_data": {
+      "update_id": 476801088,
+      "edited_message": {
+        "message_id": 154,
+        "from": {
+          "id": 227974324,
+          "is_bot": false,
+          "first_name": "Владислав",
+          "last_name": "Субботин",
+          "username": "subbotinv",
+          "language_code": "ru",
+          "is_premium": true
+        },
+        "chat": {
+          "id": -4064339494,
+          "title": "SR dev",
+          "type": "group",
+          "all_members_are_administrators": true,
+          "accepted_gift_types": {
+            "unlimited_gifts": false,
+            "limited_gifts": false,
+            "unique_gifts": false,
+            "premium_subscription": false
+          }
+        },
+        "date": 1751623367,
+        "edit_date": 1751623500,
+        "text": "отредактированный текст"
+      }
+    },
+    "fields": {
+      "update_id": 476801088,
+      "edited_message": {
+        "message_id": 154,
+        "from": {
+          "id": 227974324,
+          "is_bot": false,
+          "first_name": "Владислав",
+          "last_name": "Субботин",
+          "username": "subbotinv",
+          "language_code": "ru",
+          "is_premium": true
+        },
+        "chat": {
+          "id": -4064339494,
+          "title": "SR dev",
+          "type": "group",
+          "all_members_are_administrators": true,
+          "accepted_gift_types": {
+            "unlimited_gifts": false,
+            "limited_gifts": false,
+            "unique_gifts": false,
+            "premium_subscription": false
+          }
+        },
+        "date": 1751623367,
+        "edit_date": 1751623500,
+        "text": "отредактированный текст"
+      }
+    }
+  }
+}
+JSON;
+
     public function __construct(
         private BotGetUpdatesService $botGetUpdatesService,
         private LoggerInterface $logger,
@@ -201,6 +269,23 @@ JSON;
 
             /** @var Message $message */
             $message = $update->getMessage();
+
+            // Проверяем, является ли это отредактированным сообщением
+            if ($update->getUpdateType() === Update::TYPE_EDITED_MESSAGE) {
+                $editedMessage = $update->getEditedMessage();
+                if ($editedMessage && $editedMessage->getType() === 'text') {
+                    $this->logger->info('Received edited text message', [
+                        'chat_id' => $editedMessage->getChat()->getId(),
+                        'message_id' => $editedMessage->getMessageId(),
+                        'text' => $editedMessage->getText(),
+                        'edit_date' => $editedMessage->getEditDate(),
+                    ]);
+
+                    $this->subscriberMessageService->update($editedMessage);
+                }
+
+                continue;
+            }
 
             // сейчас в БД сохраняются только текстовые сообщения
             if ($message->getType() === 'text') {
