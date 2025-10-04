@@ -7,15 +7,16 @@ namespace App\Module\BotGetUpdates;
 /**
  * @todo: get updates зависит от bot commands; рассмотреть возможность использовать event
  */
-
-use App\Module\BotCommands\DTO\GetBotCommandsDTO;
 use App\Module\BotCommands\Factory\BotCommandHandlerFactory;
 use App\Module\BotCommands\Service\BotCommandsService;
-use App\Module\BotCommands\ValueObject\BotCommand;
+use App\Module\BotGetUpdates\Pipeline\Payload;
+use App\Module\BotGetUpdates\Pipeline\Stage\CommandStage;
+use App\Module\BotGetUpdates\Pipeline\Stage\EditedTextMessageStage;
+use App\Module\BotGetUpdates\Pipeline\Stage\NewTextMessageStrategy;
+use App\Module\BotGetUpdates\Pipeline\PipelineFactory;
 use App\Module\BotGetUpdates\Service\BotGetUpdatesService;
 use App\Module\BotGetUpdates\Service\SubscriberMessageService;
 use App\Module\BotGetUpdates\Service\SubscriberService;
-use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
@@ -267,55 +268,14 @@ JSON;
                 'update' => var_export($update, true),
             ]);
 
-            /** @var Message $message */
-            $message = $update->getMessage();
+            $updatePipeline = PipelineFactory::create(
+                new EditedTextMessageStage($this->subscriberMessageService),
+                new NewTextMessageStrategy($this->subscriberService, $this->subscriberMessageService),
+                new CommandStage($this->botCommandsService, $this->botCommandHandlerFactory),
+            );
 
-            // Проверяем, является ли это отредактированным сообщением
-            if ($update->getUpdateType() === Update::TYPE_EDITED_MESSAGE) {
-                $editedMessage = $update->getEditedMessage();
-                if ($editedMessage && $editedMessage->getType() === 'text') {
-                    $this->logger->info('Received edited text message', [
-                        'chat_id' => $editedMessage->getChat()->getId(),
-                        'message_id' => $editedMessage->getMessageId(),
-                        'text' => $editedMessage->getText(),
-                        'edit_date' => $editedMessage->getEditDate(),
-                    ]);
-
-                    $this->subscriberMessageService->update($editedMessage);
-                }
-
-                continue;
-            }
-
-            // сейчас в БД сохраняются только текстовые сообщения
-            if ($message->getType() === 'text') {
-                $domainSubscriber = $this->subscriberService->create($message->getFrom());
-                $this->subscriberMessageService->create($message, $domainSubscriber);
-            }
-
-            if ($message->getType() !== 'command') {
-                continue;
-            }
-
-            foreach ($message->getEntities() as $entity) {
-                if ($entity->getType() !== 'bot_command') {
-                    continue;
-                }
-
-                if ($message->getCommand() === null) {
-                    continue;
-                }
-
-                $botCommand = $this->botCommandsService->findCommandByCommandText(
-                    $message->getCommand(),
-                    $update->getBotUsername(),
-                    GetBotCommandsDTO::makeDTO()
-                );
-
-                if ($botCommand !== null) {
-                    $this->handleBotCommand($botCommand, $update);
-                }
-            }
+            $payload = new Payload($update);
+            $updatePipeline->process($payload);
         }
     }
 
@@ -352,11 +312,5 @@ JSON;
     private function isTypeMessage(string $updateType): bool
     {
         return in_array($updateType, [Update::TYPE_MESSAGE, Update::TYPE_EDITED_MESSAGE], true);
-    }
-
-    private function handleBotCommand(BotCommand $botCommand, Update $update): void
-    {
-        $botCommandHandler = $this->botCommandHandlerFactory->createBotCommandHandler($botCommand->getCommand());
-        $botCommandHandler?->handle($update);
     }
 }

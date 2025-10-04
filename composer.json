@@ -26,6 +26,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.2",
         "dragonmantank/cron-expression": "^3.4",
+        "league/pipeline": "^1.1",
         "longman/telegram-bot": "^0.82.0",
         "predis/predis": "^2.2",
         "ramsey/uuid-doctrine": "^2.1",
