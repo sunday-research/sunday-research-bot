@@ -10,9 +10,9 @@ namespace App\Module\BotGetUpdates;
 use App\Module\BotCommands\Factory\BotCommandHandlerFactory;
 use App\Module\BotCommands\Service\BotCommandsService;
 use App\Module\BotGetUpdates\Pipeline\Payload;
-use App\Module\BotGetUpdates\Pipeline\Stage\CommandStage;
-use App\Module\BotGetUpdates\Pipeline\Stage\EditedTextMessageStage;
-use App\Module\BotGetUpdates\Pipeline\Stage\NewTextMessageStrategy;
+use App\Module\BotGetUpdates\Pipeline\Stage\HandleBotCommandStage;
+use App\Module\BotGetUpdates\Pipeline\Stage\UpdateTextMessageStage;
+use App\Module\BotGetUpdates\Pipeline\Stage\CreateTextMessageStage;
 use App\Module\BotGetUpdates\Pipeline\PipelineFactory;
 use App\Module\BotGetUpdates\Service\BotGetUpdatesService;
 use App\Module\BotGetUpdates\Service\SubscriberMessageService;
@@ -269,9 +269,9 @@ JSON;
             ]);
 
             $updatePipeline = PipelineFactory::create(
-                new EditedTextMessageStage($this->subscriberMessageService),
-                new NewTextMessageStrategy($this->subscriberService, $this->subscriberMessageService),
-                new CommandStage($this->botCommandsService, $this->botCommandHandlerFactory),
+                new CreateTextMessageStage($this->subscriberService, $this->subscriberMessageService),
+                new UpdateTextMessageStage($this->subscriberMessageService),
+                new HandleBotCommandStage($this->botCommandsService, $this->botCommandHandlerFactory),
             );
 
             $payload = new Payload($update);

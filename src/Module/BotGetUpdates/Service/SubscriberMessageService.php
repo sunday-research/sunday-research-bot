@@ -15,7 +15,6 @@ use App\Module\BotGetUpdates\Infrastructure\Doctrine\Mapper\SubscriberMessageMap
 use App\Module\BotGetUpdates\Infrastructure\Doctrine\Repository\SubscriberMessageRepository;
 use App\Module\BotGetUpdates\Infrastructure\Doctrine\Repository\SubscriberRepository;
 use Longman\TelegramBot\Entities\Message;
-use RuntimeException;
 
 readonly class SubscriberMessageService
 {

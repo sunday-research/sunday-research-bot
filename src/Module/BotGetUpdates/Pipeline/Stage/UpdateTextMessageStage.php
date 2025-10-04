@@ -8,7 +8,7 @@ use App\Module\BotGetUpdates\Pipeline\Payload;
 use App\Module\BotGetUpdates\Service\SubscriberMessageService;
 use Longman\TelegramBot\Entities\Update;
 
-final readonly class EditedTextMessageStage
+final readonly class UpdateTextMessageStage
 {
     public function __construct(
         private SubscriberMessageService $subscriberMessageService,

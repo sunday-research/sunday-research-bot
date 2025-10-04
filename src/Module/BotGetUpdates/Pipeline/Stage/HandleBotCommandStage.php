@@ -11,7 +11,7 @@ use App\Module\BotCommands\ValueObject\BotCommand;
 use App\Module\BotGetUpdates\Pipeline\Payload;
 use Longman\TelegramBot\Entities\Update;
 
-final readonly class CommandStage
+final readonly class HandleBotCommandStage
 {
     public function __construct(
         private BotCommandsService $botCommandsService,
@@ -64,4 +64,3 @@ final readonly class CommandStage
         $botCommandHandler?->handle($update);
     }
 }
-

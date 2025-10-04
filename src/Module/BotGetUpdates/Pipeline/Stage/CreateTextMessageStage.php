@@ -9,7 +9,7 @@ use App\Module\BotGetUpdates\Service\SubscriberMessageService;
 use App\Module\BotGetUpdates\Service\SubscriberService;
 use Longman\TelegramBot\Entities\Update;
 
-final readonly class NewTextMessageStrategy
+final readonly class CreateTextMessageStage
 {
     public function __construct(
         private SubscriberService $subscriberService,
@@ -38,4 +38,3 @@ final readonly class NewTextMessageStrategy
         return $payload->withProcessed(true);
     }
 }
-
