@@ -6,4 +6,6 @@ namespace App\Module\BotGetUpdates\Exception;
 
 use RuntimeException;
 
-class SubscriberNotFoundException extends RuntimeException {}
+class SubscriberNotFoundException extends RuntimeException
+{
+}
