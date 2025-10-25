@@ -24,10 +24,25 @@ jobs:
                   username: ${{ secrets.REMOTE_USER }}
                   key: ${{ secrets.SSH_KEY }}
                   script: |
-                      cd /var/www/sunday-research-bot
-                      git pull origin dev
-                      docker-compose -f compose-prod.yaml down
-                      docker-compose -f compose-prod.yaml up -d --build
-                      docker-compose -f compose-prod.yaml exec symfony composer install --no-dev --optimize-autoloader
-                      docker-compose -f compose-prod.yaml exec symfony php bin/console cache:clear --env=prod
-                    #   docker-compose -f compose-prod.yaml exec symfony php bin/console doctrine:migrations:migrate --no-interaction --env=prod
+                    cd /var/www/sunday-research-bot
+                    
+                    # Получаем ветку из контекста GitHub
+                    BRANCH=${{ github.ref_name }}
+                    echo "Deploying branch: $BRANCH"
+                    
+                    # Безопасный git pull
+                    git checkout $BRANCH --force
+                    git reset --hard HEAD
+                    git clean -fd
+                    git fetch origin
+                    git reset --hard origin/$BRANCH
+                    
+                    # Проверяем результат
+                    echo "Deployed: $(git rev-parse HEAD)"
+                    
+                    # Деплой
+                    docker compose -f compose-prod.yaml down
+                      docker compose -f compose-prod.yaml up -d --build
+                      docker compose -f compose-prod.yaml exec symfony composer install --no-dev --optimize-autoloader
+                      docker compose -f compose-prod.yaml exec symfony php bin/console cache:clear --env=prod
+                    #   docker compose -f compose-prod.yaml exec symfony php bin/console doctrine:migrations:migrate --no-interaction --env=prod
