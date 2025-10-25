@@ -1,0 +1,52 @@
+version: '3.8'
+
+networks:
+  sunday-research-bot-network:
+    name: sunday-research-bot-network
+    driver: bridge
+
+services:
+  redis:
+    image: redis:7.2.3-alpine3.19
+    container_name: "${COMPOSE_PROJECT_NAME:-sunday-research-bot}.redis"
+    volumes:
+      - "./docker/redis/redis.conf:/etc/redis.conf"
+    command: [ "redis-server", "/etc/redis.conf" ]
+    ports:
+      - "127.0.0.1:${REDIS_EXTERNAL_PORT:-6379}:6379"
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    networks:
+      - sunday-research-bot-network
+    restart: "on-failure"
+  postgres:
+    image: postgres:16.3-alpine3.20
+    container_name: "${COMPOSE_PROJECT_NAME:-sunday-research-bot}.postgres"
+    # set shared memory limit when using docker-compose
+    shm_size: 256mb
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_MULTIPLE_DATABASES: "${TEST_POSTGRES_DB:-test_sunday_research_bot}:${TEST_POSTGRES_USER:-test_sunday_research_bot}:${TEST_POSTGRES_PASSWORD:-!ChangeMe!}"
+      PGDATA: /var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    volumes:
+      - "${POSTGRES_DATA_PATH:-/var/lib/postgresql/data}:/var/lib/postgresql/data"
+      #- "${POSTGRES_BACKUP_PATH:-./data/postgres/backups}:/backups"
+    ports:
+      - "127.0.0.1:${POSTGRES_EXTERNAL_PORT:-5432}:5432"
+    networks:
+      - sunday-research-bot-network
+    restart: "on-failure"
+
+# Volumes теперь не нужны, так как используем bind mount

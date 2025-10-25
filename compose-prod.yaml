@@ -1,24 +1,55 @@
+version: '3.8'
+
+networks:
+  sunday-research-bot-network:
+    external: true
+
 services:
-  bot_update_listener:
+  symfony:
+    #image: ghcr.io/sunday-research/sunday-research-bot:1.0.0
     build:
       context: docker/symfony
       dockerfile: Dockerfile
-    container_name: "${COMPOSE_PROJECT_NAME:-sunday-research-bot}.bot_update_listener"
+    container_name: "${COMPOSE_PROJECT_NAME:-sunday-research-bot}.symfony"
     working_dir: "/app"
-    depends_on:
-      - redis
-      - postgres
     volumes:
       - ".:/app"
-    #command: [ "/app/bin/console", "app:bot-update-listener" ]
-    command: sleep infinity
-    stop_signal: SIGQUIT # этот сигнал используется по умолчанию
+    command: [ "/usr/local/sbin/php-fpm", "--nodaemonize" ]
+    healthcheck:
+      test: [ "CMD-SHELL", "pgrep php-fpm > /dev/null" ]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    networks:
+      - sunday-research-bot-network
     deploy:
       resources:
         limits:
           cpus: '1'
           memory: 256M
-          #pids: 1
         reservations:
           cpus: '0.50'
           memory: 128M
+    restart: "on-failure"
+
+  bot_update_listener:
+    #image: ghcr.io/sunday-research/sunday-research-bot:1.0.0
+    build:
+      context: docker/symfony
+      dockerfile: Dockerfile
+    container_name: "${COMPOSE_PROJECT_NAME:-sunday-research-bot}.bot_update_listener"
+    working_dir: "/app"
+    command: [ "/app/bin/console", "app:bot-update-listener" ]
+    stop_signal: SIGQUIT
+    networks:
+      - sunday-research-bot-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 256M
+        reservations:
+          cpus: '0.50'
+          memory: 128M
+    restart: "on-failure"
