@@ -27,6 +27,10 @@ final readonly class MediaUploadCacheRepository
     public function getMediaFileInfo(MediaFileHashVO $fileHash): ?MediaFileInfoDTO
     {
         $cacheKey = $this->getCacheKey($fileHash);
+
+        /**
+         * @var array{}|array{file_id: string, file_unique_id: string, media_type: string, file_size: int, file_path: string}
+         */
         $fileInfo = $this->client->hgetall($cacheKey);
 
         if (empty($fileInfo)) {
@@ -34,11 +38,11 @@ final readonly class MediaUploadCacheRepository
         }
 
         return MediaFileInfoDTO::makeDTO(
-            fileId: $fileInfo['file_id'] ?? '',
-            fileUniqueId: $fileInfo['file_unique_id'] ?? '',
-            mediaType: MediaTypeEnum::from($fileInfo['media_type'] ?? ''),
-            fileSize: isset($fileInfo['file_size']) ? (int)$fileInfo['file_size'] : null,
-            filePath: $fileInfo['file_path'] ?? null
+            fileId: $fileInfo['file_id'],
+            fileUniqueId: $fileInfo['file_unique_id'],
+            mediaType: MediaTypeEnum::from($fileInfo['media_type']),
+            fileSize: $fileInfo['file_size'],
+            filePath: $fileInfo['file_path']
         );
     }
 
@@ -49,6 +53,10 @@ final readonly class MediaUploadCacheRepository
         }
 
         $cacheKey = $this->getCacheKey($fileHash);
+
+        /**
+         * @var array{file_id: string, file_unique_id: string, media_type: string, file_size: int, file_path: string}
+         */
         $data = $fileInfo->toArray();
 
         // Используем NX (только если ключ не существует)
@@ -58,14 +66,11 @@ final readonly class MediaUploadCacheRepository
             $this->client->multi();
             $this->client->hset($cacheKey, 'file_unique_id', $data['file_unique_id']);
             $this->client->hset($cacheKey, 'media_type', $data['media_type']);
-            if (isset($data['file_size'])) {
-                $this->client->hset($cacheKey, 'file_size', (string)$data['file_size']);
-            }
-            if (isset($data['file_path'])) {
-                $this->client->hset($cacheKey, 'file_path', $data['file_path']);
-            }
+            $this->client->hset($cacheKey, 'file_size', (string)$data['file_size']);
+            $this->client->hset($cacheKey, 'file_path', $data['file_path']);
             $this->client->expire($cacheKey, $ttlInSeconds);
             $this->client->exec();
+
             return true;
         }
 

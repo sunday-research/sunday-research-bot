@@ -24,6 +24,7 @@ use Psr\Log\LoggerInterface;
 
 final readonly class BotGetUpdatesManager
 {
+    // @phpstan-ignore-next-line
     private const UPDATE_COMMAND_STRUCTURE = <<<JSON
 {
   "update": {
@@ -103,6 +104,8 @@ final readonly class BotGetUpdatesManager
   }
 }
 JSON;
+
+    // @phpstan-ignore-next-line
     private const UPDATE_TEXT_STRUCTURE = <<<JSON
 {
   "update": {
@@ -168,6 +171,8 @@ JSON;
   }
 }
 JSON;
+
+    // @phpstan-ignore-next-line
     private const UPDATE_EDITED_MESSAGE_STRUCTURE = <<<JSON
 {
   "update": {

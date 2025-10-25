@@ -26,7 +26,7 @@ final readonly class UpdateTextMessageStage
         }
 
         $editedMessage = $payload->update->getEditedMessage();
-        if (!$editedMessage || $editedMessage->getType() !== 'text') {
+        if ($editedMessage->getType() !== 'text') {
             return $payload;
         }
 
