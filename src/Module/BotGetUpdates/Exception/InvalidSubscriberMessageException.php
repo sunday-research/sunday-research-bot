@@ -6,4 +6,6 @@ namespace App\Module\BotGetUpdates\Exception;
 
 use RuntimeException;
 
-class InvalidSubscriberMessageException extends RuntimeException {}
+class InvalidSubscriberMessageException extends RuntimeException
+{
+}

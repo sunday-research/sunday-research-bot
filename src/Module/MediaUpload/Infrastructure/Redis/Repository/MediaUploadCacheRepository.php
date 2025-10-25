@@ -28,7 +28,7 @@ final readonly class MediaUploadCacheRepository
     {
         $cacheKey = $this->getCacheKey($fileHash);
         $fileInfo = $this->client->hgetall($cacheKey);
-        
+
         if (empty($fileInfo)) {
             return null;
         }

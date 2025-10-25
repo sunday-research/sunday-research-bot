@@ -28,7 +28,7 @@ final readonly class MediaUploadClient
     public function uploadMedia(UploadMediaDTO $uploadMediaDTO): MediaFileInfoDTO
     {
         $filePath = $uploadMediaDTO->getFilePath();
-        
+
         if (!file_exists($filePath)) {
             throw new MediaFileNotFoundException($filePath);
         }
@@ -51,7 +51,7 @@ final readonly class MediaUploadClient
         }
 
         $response = Request::{$method}($data);
-        
+
         if (!$response->isOk()) {
             throw new MediaUploadFailedException(
                 sprintf('Failed to upload media, error: `%s`', $response->getDescription())

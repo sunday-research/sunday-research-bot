@@ -6,4 +6,6 @@ namespace App\Module\MediaUpload\Exception;
 
 use RuntimeException;
 
-abstract class MediaUploadException extends RuntimeException {}
+abstract class MediaUploadException extends RuntimeException
+{
+}
