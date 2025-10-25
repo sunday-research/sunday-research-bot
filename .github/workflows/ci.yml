@@ -78,7 +78,7 @@ jobs:
               with:
                   host: ${{ secrets.REMOTE_HOST }}
                   username: ${{ secrets.REMOTE_USER }}
-                  key: ${{ secrets.SSH_KEY }}
+                  key: ${{ secrets.DEPLOY_KEY }}
                   port: 22
                   timeout: 60s
                   command_timeout: 10m
@@ -90,6 +90,13 @@ jobs:
                       
                       # Настройка Git для работы с репозиторием
                       git config --global --add safe.directory /var/www/sunday-research-bot
+                      
+                      # Настройка SSH для работы с Deploy Key
+                      mkdir -p ~/.ssh
+                      chmod 700 ~/.ssh
+                      echo "Host github.com" >> ~/.ssh/config
+                      echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+                      echo "  UserKnownHostsFile /dev/null" >> ~/.ssh/config
                       
                       # Безопасный git pull
                       git checkout $BRANCH --force
