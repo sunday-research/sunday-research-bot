@@ -1,0 +1,99 @@
+name: CI/CD Pipeline
+
+on:
+    push:
+        branches: [dev, issue-20]
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    # Этап 1: Линтинг и тесты
+    lint:
+        runs-on: ubuntu-latest
+        
+        services:
+            postgres:
+                image: postgres:16
+                env:
+                    POSTGRES_DB: test_sunday_research_bot
+                    POSTGRES_USER: test_sunday_research_bot
+                    POSTGRES_PASSWORD: '!ChangeMe!'
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 5432:5432
+
+        env:
+            APP_ENV: test
+            POSTGRES_HOST: localhost
+            PGPASSWORD: '!ChangeMe!'
+
+        steps:
+            - uses: actions/checkout@v4
+            - name: Validate composer.json
+              run: composer validate --strict
+            - name: Cache Composer packages
+              uses: actions/cache@v3
+              with:
+                  path: vendor
+                  key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+            - name: Setup PHP 8.2
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: "8.2"
+                  extensions: pdo_pgsql
+            - name: Install dependencies
+              run: composer install --prefer-dist --no-progress
+            - name: Run PHP-CS-Fixer
+              run: composer php-cs-fixer-diff
+            - name: Run PHPStan
+              run: composer phpstan-full-scan
+            - name: Wait for PostgreSQL
+              run: |
+                  until pg_isready -h localhost -p 5432 -U test_sunday_research_bot; do
+                      echo "Waiting for Postgres..."; sleep 1;
+                  done
+            - name: Run migrations
+              run: php bin/console doctrine:migrations:migrate --no-interaction --env=test
+            - name: Run tests
+              run: composer phpunit
+
+    # Этап 2: Деплой (только если линтер прошел)
+    deploy:
+        runs-on: ubuntu-latest
+        needs: lint  # Ключевая строка!
+        environment: production
+        
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Deploy via SSH
+              uses: appleboy/ssh-action@v1.0.0
+              with:
+                  host: ${{ secrets.REMOTE_HOST }}
+                  username: ${{ secrets.REMOTE_USER }}
+                  key: ${{ secrets.SSH_KEY }}
+                  script: |
+                      cd /var/www/sunday-research-bot
+                      
+                      BRANCH=${{ github.ref_name }}
+                      echo "Deploying branch: $BRANCH"
+                      
+                      git checkout $BRANCH --force
+                      git reset --hard HEAD
+                      git clean -fd
+                      git fetch origin
+                      git reset --hard origin/$BRANCH
+                      
+                      echo "Deployed: $(git rev-parse HEAD)"
+                      
+                      docker compose -f compose-prod.yaml stop
+                      docker compose -f compose-prod.yaml up -d --build
+                      docker compose -f compose-prod.yaml exec symfony composer install --no-dev --optimize-autoloader
+                      docker compose -f compose-prod.yaml exec symfony php bin/console cache:clear --env=prod
