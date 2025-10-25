@@ -33,7 +33,7 @@ final class SendMediaMessageDTOTest extends TestCase
     /**
      * @return array<string, array{string, bool, string}>
      */
-    public function mediaTypeDetectionProvider(): array
+    public static function mediaTypeDetectionProvider(): array
     {
         return [
             'external http link' => [

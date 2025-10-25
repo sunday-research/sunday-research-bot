@@ -10,8 +10,19 @@ use App\Tests\Module\BotGetUpdates\Fixtures\ServerResponseFixture;
 use App\Tests\Module\BotGetUpdates\Fixtures\TextUpdateFixture;
 use PHPUnit\Framework\TestCase;
 
-final class UpdateDataProviderTest
+/**
+ * @coversNothing
+ */
+final class UpdateDataProviderTest extends TestCase
 {
+    /**
+     * This class only provides data for other tests.
+     * No actual tests are performed here.
+     */
+    public function testDataProviderClass(): void
+    {
+        $this->assertTrue(true); // @phpstan-ignore-line
+    }
     /**
      * @return array<string, array{testName: string, updateFactory: callable(): \Longman\TelegramBot\Entities\Update, shouldCreateSubscriber: bool, shouldCreateMessage: bool, shouldUpdateMessage?: bool}>
      */
