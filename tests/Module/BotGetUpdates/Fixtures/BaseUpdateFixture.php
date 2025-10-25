@@ -19,8 +19,10 @@ abstract class BaseUpdateFixture
     protected const TEST_MESSAGE_ID_TEXT = 154;
 
     public function __construct(
-        private TestCase $testCase
+        /** @phpstan-ignore-next-line */
+        private readonly TestCase $testCase
     ) {
+        // TestCase is stored for potential future use in fixtures
     }
 
     protected function createUser(): User
@@ -46,7 +48,7 @@ abstract class BaseUpdateFixture
             'type' => 'group',
         ];
         
-        return new Chat($chatData, 'sunday_research_bot');
+        return new Chat($chatData);
     }
 
     protected function createBotCommandEntity(): MessageEntity
@@ -60,6 +62,9 @@ abstract class BaseUpdateFixture
         return new MessageEntity($entityData, 'sunday_research_bot');
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $entities
+     */
     protected function createMessage(
         int $messageId,
         string $text,

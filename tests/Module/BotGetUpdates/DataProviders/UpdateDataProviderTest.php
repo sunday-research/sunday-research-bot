@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 final class UpdateDataProviderTest
 {
     /**
-     * @return array<int, array{0: string, 1: callable, 2: bool, 3: bool}>
+     * @return array<string, array{testName: string, updateFactory: callable(): \Longman\TelegramBot\Entities\Update, shouldCreateSubscriber: bool, shouldCreateMessage: bool, shouldUpdateMessage?: bool}>
      */
     public static function messageUpdateProvider(TestCase $testCase): array
     {
@@ -41,7 +41,7 @@ final class UpdateDataProviderTest
     }
 
     /**
-     * @return array<int, array{0: string, 1: callable, 2: bool}>
+     * @return array<string, array{testName: string, updateFactory: callable(): \Longman\TelegramBot\Entities\ServerResponse, shouldDoNothing: bool}>
      */
     public static function emptyUpdateProvider(TestCase $testCase): array
     {
@@ -55,7 +55,7 @@ final class UpdateDataProviderTest
     }
 
     /**
-     * @return array<int, array{0: string, 1: callable, 2: string, 3: string}>
+     * @return array<string, array{testName: string, updateFactory: callable(): \Longman\TelegramBot\Entities\Update, expectedCommand: string, expectedText: string}>
      */
     public static function commandVariationsProvider(TestCase $testCase): array
     {
@@ -76,7 +76,7 @@ final class UpdateDataProviderTest
     }
 
     /**
-     * @return array<int, array{0: string, 1: callable, 2: string}>
+     * @return array<string, array{testName: string, updateFactory: callable(): \Longman\TelegramBot\Entities\Update, expectedText: string}>
      */
     public static function textVariationsProvider(TestCase $testCase): array
     {

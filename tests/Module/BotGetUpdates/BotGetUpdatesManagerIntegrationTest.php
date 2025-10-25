@@ -32,7 +32,6 @@ final class BotGetUpdatesManagerIntegrationTest extends KernelTestCase
 {
     private const TEST_TELEGRAM_USER_ID = 227974324;
     private const TEST_CHAT_ID = -4064339494;
-    private const TEST_MESSAGE_ID_COMMAND = 155;
     private const TEST_MESSAGE_ID_TEXT = 154;
 
     private EntityManagerInterface $em;
@@ -90,8 +89,11 @@ final class BotGetUpdatesManagerIntegrationTest extends KernelTestCase
             ->getQuery()
             ->getResult();
 
+        /** @var array<int, mixed> $messages */
         foreach ($messages as $message) {
-            $this->em->remove($message);
+            if (is_object($message)) {
+                $this->em->remove($message);
+            }
         }
 
         // Find and remove the test subscriber
@@ -117,6 +119,7 @@ final class BotGetUpdatesManagerIntegrationTest extends KernelTestCase
     ): void {
         // Arrange
         $update = $updateFactory();
+        assert($update instanceof \Longman\TelegramBot\Entities\Update);
         $serverResponse = (new ServerResponseFixture($this))->createWithSingleUpdate($update);
         
         $this->botGetUpdatesServiceMock
@@ -150,7 +153,10 @@ final class BotGetUpdatesManagerIntegrationTest extends KernelTestCase
         // For edited message test, create existing data
         if ($shouldUpdateMessage) {
             $this->createAndPersistSubscriber();
-            $this->createAndPersistMessage($this->subscriberRepository->findByTelegramUserId(self::TEST_TELEGRAM_USER_ID));
+            $subscriber = $this->subscriberRepository->findByTelegramUserId(self::TEST_TELEGRAM_USER_ID);
+            if ($subscriber !== null) {
+                $this->createAndPersistMessage($subscriber);
+            }
         }
 
         $subscriberService = new SubscriberService($this->subscriberRepository);
@@ -218,7 +224,7 @@ final class BotGetUpdatesManagerIntegrationTest extends KernelTestCase
     }
 
     /**
-     * @return array<int, array{0: string, 1: callable, 2: bool, 3: bool, 4: bool}>
+     * @return array<string, array{testName: string, updateFactory: callable(): \Longman\TelegramBot\Entities\Update, shouldCreateSubscriber: bool, shouldCreateMessage: bool, shouldUpdateMessage?: bool}>
      */
     public static function messageUpdateProvider(): array
     {
@@ -251,11 +257,12 @@ final class BotGetUpdatesManagerIntegrationTest extends KernelTestCase
         if ($instance === null) {
             $instance = new self('test');
         }
+        /** @var self $instance */
         return $instance;
     }
 
     /**
-     * @return array<int, array{0: string, 1: callable, 2: bool}>
+     * @return array<string, array{testName: string, updateFactory: callable(): \Longman\TelegramBot\Entities\ServerResponse, shouldDoNothing: bool}>
      */
     public static function emptyUpdateProvider(): array
     {
@@ -277,6 +284,7 @@ final class BotGetUpdatesManagerIntegrationTest extends KernelTestCase
     ): void {
         // Arrange
         $update = $updateFactory();
+        assert($update instanceof \Longman\TelegramBot\Entities\Update);
         $serverResponse = (new ServerResponseFixture($this))->createWithSingleUpdate($update);
         
         $this->botGetUpdatesServiceMock
@@ -327,6 +335,7 @@ final class BotGetUpdatesManagerIntegrationTest extends KernelTestCase
     ): void {
         // Arrange
         $update = $updateFactory();
+        assert($update instanceof \Longman\TelegramBot\Entities\Update);
         $serverResponse = (new ServerResponseFixture($this))->createWithSingleUpdate($update);
         
         $this->botGetUpdatesServiceMock
@@ -359,7 +368,7 @@ final class BotGetUpdatesManagerIntegrationTest extends KernelTestCase
     }
 
     /**
-     * @return array<int, array{0: string, 1: callable, 2: string, 3: string}>
+     * @return array<string, array{testName: string, updateFactory: callable(): \Longman\TelegramBot\Entities\Update, expectedCommand: string, expectedText: string}>
      */
     public static function commandVariationsProvider(): array
     {
@@ -380,7 +389,7 @@ final class BotGetUpdatesManagerIntegrationTest extends KernelTestCase
     }
 
     /**
-     * @return array<int, array{0: string, 1: callable, 2: string}>
+     * @return array<string, array{testName: string, updateFactory: callable(): \Longman\TelegramBot\Entities\Update, expectedText: string}>
      */
     public static function textVariationsProvider(): array
     {
@@ -417,7 +426,10 @@ final class BotGetUpdatesManagerIntegrationTest extends KernelTestCase
         $this->em->persist($subscriber);
         $this->em->flush();
 
-        $this->createdSubscriberIds[] = $subscriber->getId()->toString();
+        $subscriberId = $subscriber->getId();
+        if ($subscriberId !== null) {
+            $this->createdSubscriberIds[] = $subscriberId->toString();
+        }
 
         return $subscriber;
     }
@@ -435,7 +447,10 @@ final class BotGetUpdatesManagerIntegrationTest extends KernelTestCase
         $this->em->persist($message);
         $this->em->flush();
 
-        $this->createdMessageIds[] = $message->getId()->toString();
+        $messageId = $message->getId();
+        if ($messageId !== null) {
+            $this->createdMessageIds[] = $messageId->toString();
+        }
 
         return $message;
     }
@@ -465,6 +480,7 @@ final class BotGetUpdatesManagerIntegrationTest extends KernelTestCase
             ->getOneOrNullResult();
 
         $this->assertNotNull($message, 'Message should exist');
+        /** @var \App\Module\BotGetUpdates\Infrastructure\Doctrine\Model\SubscriberMessage $message */
         $this->assertEquals(self::TEST_CHAT_ID, $message->getChatId());
         $this->assertFalse($message->isBotSender());
     }

@@ -11,10 +11,15 @@ use PHPUnit\Framework\TestCase;
 final class ServerResponseFixture
 {
     public function __construct(
-        private TestCase $testCase
+        /** @phpstan-ignore-next-line */
+        private readonly TestCase $testCase
     ) {
+        // TestCase is stored for potential future use in fixtures
     }
 
+    /**
+     * @param array<int, Update|array<string, mixed>> $updates
+     */
     public function create(array $updates): ServerResponse
     {
         // Convert Update objects to raw data if needed

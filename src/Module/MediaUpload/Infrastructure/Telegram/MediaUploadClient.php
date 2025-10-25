@@ -10,6 +10,7 @@ use App\Module\MediaUpload\Exception\MediaFileNotFoundException;
 use App\Module\MediaUpload\Exception\MediaUploadFailedException;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
+use Longman\TelegramBot\Entities\ServerResponse;
 
 final readonly class MediaUploadClient
 {
@@ -50,6 +51,9 @@ final readonly class MediaUploadClient
             $data['parse_mode'] = $uploadMediaDTO->getParseMode();
         }
 
+        /**
+         * @var ServerResponse $response
+         */
         $response = Request::{$method}($data);
 
         if (!$response->isOk()) {
@@ -59,7 +63,8 @@ final readonly class MediaUploadClient
         }
 
         $result = $response->getResult();
-        $file = $result->get($fileField);
+        /** @var \Longman\TelegramBot\Entities\File $file */
+        $file = $result->get($fileField); // @phpstan-ignore-line
 
         return MediaFileInfoDTO::makeDTO(
             fileId: $file->getFileId(),

@@ -10,12 +10,15 @@ final class CommandUpdateFixture extends BaseUpdateFixture
 {
     public function create(): Update
     {
+        /** @var array<string, mixed> $entityData */
+        $entityData = $this->createBotCommandEntity()->getRawData();
+        
         $message = $this->createMessage(
             messageId: self::TEST_MESSAGE_ID_COMMAND,
             text: '/issue@sunday_research_bot',
             type: 'command',
             command: 'issue',
-            entities: [$this->createBotCommandEntity()]
+            entities: [$entityData]
         );
 
         return $this->createUpdate(Update::TYPE_MESSAGE, $message);
@@ -23,12 +26,15 @@ final class CommandUpdateFixture extends BaseUpdateFixture
 
     public function createWithCustomCommand(string $command, string $text): Update
     {
+        /** @var array<string, mixed> $entityData */
+        $entityData = $this->createBotCommandEntity()->getRawData();
+        
         $message = $this->createMessage(
             messageId: self::TEST_MESSAGE_ID_COMMAND,
             text: $text,
             type: 'command',
             command: $command,
-            entities: [$this->createBotCommandEntity()]
+            entities: [$entityData]
         );
 
         return $this->createUpdate(Update::TYPE_MESSAGE, $message);
