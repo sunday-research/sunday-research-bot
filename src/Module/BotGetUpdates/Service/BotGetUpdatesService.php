@@ -8,7 +8,7 @@ use App\Module\BotGetUpdates\Infrastructure\Telegram\BotGetUpdatesClient;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 
-final readonly class BotGetUpdatesService
+class BotGetUpdatesService
 {
     public function __construct(
         private BotGetUpdatesClient $telegramBotApiClient,

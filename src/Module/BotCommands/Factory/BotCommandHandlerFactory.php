@@ -13,7 +13,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 /**
  * @todo: рассмотреть возможность использования pipeline вместо фабрики
  */
-final readonly class BotCommandHandlerFactory
+class BotCommandHandlerFactory
 {
     public function __construct(
         private MessageBusInterface $messageBus,

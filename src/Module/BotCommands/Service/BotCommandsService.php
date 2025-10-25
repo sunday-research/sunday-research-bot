@@ -15,7 +15,7 @@ use App\Module\BotCommands\Infrastructure\Telegram\BotCommandsClient;
 use App\Module\BotCommands\ValueObject\BotCommand;
 use App\Module\BotCommands\ValueObject\BotCommandsList;
 
-final readonly class BotCommandsService
+class BotCommandsService
 {
     public function __construct(
         private BotCommandsCacheRepository $botCommandsCacheRepository,

@@ -1,0 +1,101 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\Module\BotGetUpdates\DataProviders;
+
+use App\Tests\Module\BotGetUpdates\Fixtures\CommandUpdateFixture;
+use App\Tests\Module\BotGetUpdates\Fixtures\EditedMessageUpdateFixture;
+use App\Tests\Module\BotGetUpdates\Fixtures\ServerResponseFixture;
+use App\Tests\Module\BotGetUpdates\Fixtures\TextUpdateFixture;
+use PHPUnit\Framework\TestCase;
+
+final class UpdateDataProviderTest
+{
+    /**
+     * @return array<int, array{0: string, 1: callable, 2: bool, 3: bool}>
+     */
+    public static function messageUpdateProvider(TestCase $testCase): array
+    {
+        return [
+            'command message' => [
+                'testName' => 'testRunWithCommandMessage',
+                'updateFactory' => fn() => (new CommandUpdateFixture($testCase))->create(),
+                'shouldCreateSubscriber' => true,
+                'shouldCreateMessage' => true,
+            ],
+            'text message' => [
+                'testName' => 'testRunWithTextMessage',
+                'updateFactory' => fn() => (new TextUpdateFixture($testCase))->create(),
+                'shouldCreateSubscriber' => true,
+                'shouldCreateMessage' => true,
+            ],
+            'edited message' => [
+                'testName' => 'testRunWithEditedMessage',
+                'updateFactory' => fn() => (new EditedMessageUpdateFixture($testCase))->create(),
+                'shouldCreateSubscriber' => false, // Subscriber should already exist
+                'shouldCreateMessage' => false,   // Message should already exist
+                'shouldUpdateMessage' => true,
+            ],
+        ];
+    }
+
+    /**
+     * @return array<int, array{0: string, 1: callable, 2: bool}>
+     */
+    public static function emptyUpdateProvider(TestCase $testCase): array
+    {
+        return [
+            'empty updates' => [
+                'testName' => 'testRunWithEmptyUpdates',
+                'updateFactory' => fn() => (new ServerResponseFixture($testCase))->createEmpty(),
+                'shouldDoNothing' => true,
+            ],
+        ];
+    }
+
+    /**
+     * @return array<int, array{0: string, 1: callable, 2: string, 3: string}>
+     */
+    public static function commandVariationsProvider(TestCase $testCase): array
+    {
+        return [
+            'issue command' => [
+                'testName' => 'testRunWithIssueCommand',
+                'updateFactory' => fn() => (new CommandUpdateFixture($testCase))->createWithCustomCommand('issue', '/issue@sunday_research_bot'),
+                'expectedCommand' => 'issue',
+                'expectedText' => '/issue@sunday_research_bot',
+            ],
+            'help command' => [
+                'testName' => 'testRunWithHelpCommand',
+                'updateFactory' => fn() => (new CommandUpdateFixture($testCase))->createWithCustomCommand('help', '/help'),
+                'expectedCommand' => 'help',
+                'expectedText' => '/help',
+            ],
+        ];
+    }
+
+    /**
+     * @return array<int, array{0: string, 1: callable, 2: string}>
+     */
+    public static function textVariationsProvider(TestCase $testCase): array
+    {
+        return [
+            'russian text' => [
+                'testName' => 'testRunWithRussianText',
+                'updateFactory' => fn() => (new TextUpdateFixture($testCase))->createWithCustomText('Привет, мир!'),
+                'expectedText' => 'Привет, мир!',
+            ],
+            'english text' => [
+                'testName' => 'testRunWithEnglishText',
+                'updateFactory' => fn() => (new TextUpdateFixture($testCase))->createWithCustomText('Hello, world!'),
+                'expectedText' => 'Hello, world!',
+            ],
+            'emoji text' => [
+                'testName' => 'testRunWithEmojiText',
+                'updateFactory' => fn() => (new TextUpdateFixture($testCase))->createWithCustomText('🚀 Test message'),
+                'expectedText' => '🚀 Test message',
+            ],
+        ];
+    }
+}
