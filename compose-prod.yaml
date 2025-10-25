@@ -40,7 +40,7 @@ services:
       dockerfile: Dockerfile
     container_name: "${COMPOSE_PROJECT_NAME:-sunday-research-bot}.bot_update_listener"
     working_dir: "/app"
-    command: [ "/app/bin/console", "app:bot-update-listener" ]
+    command: [ "/app/bin/console", "app:bot-update-listener", "--env=prod" ]
     stop_signal: SIGQUIT
     networks:
       - sunday-research-bot-network

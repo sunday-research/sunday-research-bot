@@ -10,7 +10,7 @@ services:
       - postgres
     volumes:
       - ".:/app"
-    command: [ "/app/bin/console", "app:bot-update-listener" ]
+    command: [ "/app/bin/console", "app:bot-update-listener", "--env=dev" ]
     stop_signal: SIGQUIT # этот сигнал используется по умолчанию
     deploy:
       resources:
