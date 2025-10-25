@@ -79,12 +79,19 @@ jobs:
                   host: ${{ secrets.REMOTE_HOST }}
                   username: ${{ secrets.REMOTE_USER }}
                   key: ${{ secrets.SSH_KEY }}
+                  port: 22
+                  timeout: 60s
+                  command_timeout: 10m
                   script: |
                       cd /var/www/sunday-research-bot
                       
                       BRANCH=${{ github.ref_name }}
                       echo "Deploying branch: $BRANCH"
                       
+                      # Настройка Git для работы с репозиторием
+                      git config --global --add safe.directory /var/www/sunday-research-bot
+                      
+                      # Безопасный git pull
                       git checkout $BRANCH --force
                       git reset --hard HEAD
                       git clean -fd
@@ -93,7 +100,30 @@ jobs:
                       
                       echo "Deployed: $(git rev-parse HEAD)"
                       
-                      docker compose -f compose-prod.yaml stop
-                      docker compose -f compose-prod.yaml up -d --build
-                      docker compose -f compose-prod.yaml exec symfony composer install --no-dev --optimize-autoloader
-                      docker compose -f compose-prod.yaml exec symfony php bin/console cache:clear --env=prod
+                      # Проверяем существование файла compose
+                      if [ ! -f "compose-prod.yaml" ]; then
+                          echo "compose-prod.yaml not found, using compose.yaml"
+                          COMPOSE_FILE="compose.yaml"
+                      else
+                          COMPOSE_FILE="compose-prod.yaml"
+                      fi
+                      
+                      # Останавливаем и перезапускаем контейнеры
+                      docker compose -f $COMPOSE_FILE down
+                      docker compose -f $COMPOSE_FILE up -d --build
+                      
+                      # Ждем запуска контейнеров
+                      echo "Waiting for containers to be ready..."
+                      until docker compose -f $COMPOSE_FILE ps | grep -q "Up"; do
+                          echo "Waiting for containers..."; sleep 2;
+                      done
+                      
+                      # Дополнительная проверка готовности Symfony контейнера
+                      echo "Waiting for Symfony container to be ready..."
+                      until docker compose -f $COMPOSE_FILE exec symfony pgrep php-fpm > /dev/null 2>&1; do
+                          echo "Waiting for PHP-FPM..."; sleep 2;
+                      done
+                      
+                      # Устанавливаем зависимости и очищаем кэш
+                      docker compose -f $COMPOSE_FILE exec symfony composer install --no-dev --optimize-autoloader
+                      docker compose -f $COMPOSE_FILE exec symfony php bin/console cache:clear --env=prod
