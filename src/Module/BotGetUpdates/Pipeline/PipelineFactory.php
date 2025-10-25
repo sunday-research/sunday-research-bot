@@ -13,7 +13,7 @@ final readonly class PipelineFactory
         callable ...$stages
     ): PipelineInterface {
         $builder = new PipelineBuilder();
-        
+
         foreach ($stages as $stage) {
             $builder->add($stage);
         }
