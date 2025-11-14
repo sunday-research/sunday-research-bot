@@ -65,7 +65,7 @@ jobs:
             core.setOutput('deployment_id', deployment.data.id);
             return deployment.data.id;
 
-      - name: Create deployment directory
+      - name: Prepare deployment directory
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.REMOTE_HOST }}
@@ -73,6 +73,8 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
             mkdir -p /var/www/sunday-research-bot
+            # Remove existing docker-compose.yml if it exists (file or directory)
+            rm -rf /var/www/sunday-research-bot/docker-compose.yml
 
       - name: Copy production compose file to server
         uses: appleboy/scp-action@v0.1.7
@@ -81,7 +83,16 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           source: "./docker-compose.prod.yml"
-          target: "/var/www/sunday-research-bot/docker-compose.yml"
+          target: "/var/www/sunday-research-bot/"
+
+      - name: Rename compose file
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            mv /var/www/sunday-research-bot/docker-compose.prod.yml /var/www/sunday-research-bot/docker-compose.yml
 
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
