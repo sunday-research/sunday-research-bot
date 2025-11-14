@@ -47,14 +47,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Copy new image tag to server
+      - name: Create deployment directory
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            mkdir -p /var/www/sunday-research-bot
+
+      - name: Copy production compose file to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
-          source: "./docker-compose.yml"
-          target: "~/sunday-bot/"
+          source: "./docker-compose.prod.yml"
+          target: "/var/www/sunday-research-bot/docker-compose.yml"
 
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -65,10 +74,11 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            cd ~/sunday-bot
+            cd /var/www/sunday-research-bot
 
-            echo "Updating docker-compose.yml image tag"
-            sed -i "s|image: ghcr.io/.*/sunday-research-bot:.*|image: ghcr.io/${{ github.repository_owner }}/sunday-research-bot:${{ github.sha }}|" docker-compose.yml
+            echo "Updating image tag in docker-compose.yml"
+            # Replace placeholder with actual image tag (commit SHA)
+            sed -i "s|PLACEHOLDER_IMAGE_TAG|${{ github.sha }}|g" docker-compose.yml
 
             echo "Logging into GHCR"
             echo "$GHCR_TOKEN" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
