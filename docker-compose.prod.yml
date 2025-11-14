@@ -1,0 +1,51 @@
+version: '3.8'
+
+networks:
+  sunday-research-bot-network:
+    external: true
+    name: sunday-research-bot-network
+
+services:
+  symfony:
+    image: ghcr.io/sunday-research/sunday-research-bot:PLACEHOLDER_IMAGE_TAG
+    container_name: "${COMPOSE_PROJECT_NAME:-sunday-research-bot}.symfony"
+    working_dir: "/app"
+    depends_on:
+      - redis
+      - postgres
+    volumes:
+      - ".:/app"
+    command: [ "/usr/local/sbin/php-fpm", "--nodaemonize" ]
+    healthcheck:
+      test: [ "CMD-SHELL", "pgrep php-fpm > /dev/null" ]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    networks:
+      - sunday-research-bot-network
+    restart: "on-failure"
+
+  bot_update_listener:
+    image: ghcr.io/sunday-research/sunday-research-bot:PLACEHOLDER_IMAGE_TAG
+    container_name: "${COMPOSE_PROJECT_NAME:-sunday-research-bot}.bot_update_listener"
+    working_dir: "/app"
+    depends_on:
+      - redis
+      - postgres
+    volumes:
+      - ".:/app"
+    command: [ "/app/bin/console", "app:bot-update-listener" ]
+    stop_signal: SIGQUIT
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 256M
+        reservations:
+          cpus: '0.50'
+          memory: 128M
+    networks:
+      - sunday-research-bot-network
+    restart: "on-failure"
+
