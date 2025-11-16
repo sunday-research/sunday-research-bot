@@ -64,11 +64,17 @@ COPY . /app
 # Switch to root to install dependencies
 USER root
 
+# Verify composer files exist
+RUN test -f /app/composer.json && test -f /app/composer.lock || (echo "ERROR: composer.json or composer.lock not found!" && exit 1)
+
 # Install composer dependencies (production only)
-RUN composer install --no-dev --no-interaction --optimize-autoloader --no-scripts
+RUN cd /app && composer install --no-dev --no-interaction --optimize-autoloader --no-scripts --prefer-dist
+
+# Verify vendor directory was created
+RUN test -d /app/vendor || (echo "ERROR: vendor directory not created after composer install!" && exit 1)
 
 # Run post-install scripts
-RUN composer run-script post-install-cmd --no-interaction || true
+RUN cd /app && composer run-script post-install-cmd --no-interaction || true
 
 # Set proper permissions
 RUN chown -R $USER:$USER /app

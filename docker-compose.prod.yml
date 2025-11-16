@@ -5,6 +5,8 @@ services:
     working_dir: "/app"
     network_mode: host
     command: [ "/usr/local/sbin/php-fpm", "--nodaemonize" ]
+    env_file:
+      - .env
     healthcheck:
       test: [ "CMD-SHELL", "pgrep php-fpm > /dev/null" ]
       interval: 15s

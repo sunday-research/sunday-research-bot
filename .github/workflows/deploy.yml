@@ -1,9 +1,7 @@
 name: Build & Deploy
 
 #TODO: добавить применение миграций
-#TODO: настроить подключение к инфраструктуре
 #TODO: добавить экспорт переменных окружения в .env
-#TODO: разобраться, почему пайплайны стали дублироваться (или не стали, а они разные на самом деле?)
 
 on:
   push:
@@ -104,6 +102,20 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
             mv /var/opt/sunday-research-bot/docker-compose.prod.yml /var/opt/sunday-research-bot/docker-compose.yml
+
+      - name: Upload environment from GitHub Secret
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            cd /var/opt/sunday-research-bot
+
+            echo "Creating .env file from GitHub secret"
+            echo "${{ secrets.ENV }}" | base64 -d > .env
+
+            chmod 600 .env
 
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
