@@ -1,13 +1,41 @@
 name: PHP Lint & Tests
 
-on: [push, pull_request]
+on:
+  pull_request:
+  push:
+    branches:
+      - issue-6
+      - master
 
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
-  build:
+  check-pr:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    outputs:
+      has-pr: ${{ steps.check.outputs.has-pr }}
+    steps:
+      - name: Check for open PR
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: `${context.repo.owner}:${context.ref.replace('refs/heads/', '')}`,
+              state: 'open'
+            });
+            core.setOutput('has-pr', prs.length > 0 ? 'true' : 'false');
 
+  build:
+    needs: [check-pr]
+    if: |
+      github.event_name == 'pull_request' || 
+      (github.event_name == 'push' && needs.check-pr.outputs.has-pr != 'true')
     runs-on: ubuntu-latest
 
     services:
