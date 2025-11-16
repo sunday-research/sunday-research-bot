@@ -1,0 +1,50 @@
+# Git
+.git
+.gitignore
+.github
+
+# Dependencies
+/vendor
+/node_modules
+
+# Symfony
+/var
+/.env
+/.env.local
+/.env.*.local
+/.env.local.php
+/config/secrets/prod/prod.decrypt.private.php
+
+# IDE
+/.idea
+/.vscode
+*.swp
+*.swo
+*~
+
+# Testing
+/tests
+/phpunit.xml
+.phpunit.result.cache
+
+# Code quality
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+/phpstan.neon
+/phpstan-baseline.neon
+
+# Docker
+/docker/prometheus/data
+
+# Documentation
+/docs
+*.pdf
+
+# CI/CD
+/.github
+
+# Misc
+*.log
+.DS_Store
+Thumbs.db
+

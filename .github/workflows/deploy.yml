@@ -36,7 +36,8 @@ jobs:
         id: build
         uses: docker/build-push-action@v5
         with:
-          context: ./docker/symfony
+          context: .
+          file: ./docker/symfony/Dockerfile.prod
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/sunday-research-bot:${{ github.sha }}
