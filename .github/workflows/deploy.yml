@@ -83,9 +83,9 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            mkdir -p /var/www/sunday-research-bot
+            mkdir -p /var/opt/sunday-research-bot
             # Remove existing docker-compose.yml if it exists (file or directory)
-            rm -rf /var/www/sunday-research-bot/docker-compose.yml
+            rm -rf /var/opt/sunday-research-bot/docker-compose.yml
 
       - name: Copy production compose file to server
         uses: appleboy/scp-action@v0.1.7
@@ -94,7 +94,7 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           source: "./docker-compose.prod.yml"
-          target: "/var/www/sunday-research-bot/"
+          target: "/var/opt/sunday-research-bot/"
 
       - name: Rename compose file
         uses: appleboy/ssh-action@v1.0.3
@@ -103,7 +103,7 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            mv /var/www/sunday-research-bot/docker-compose.prod.yml /var/www/sunday-research-bot/docker-compose.yml
+            mv /var/opt/sunday-research-bot/docker-compose.prod.yml /var/opt/sunday-research-bot/docker-compose.yml
 
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -114,7 +114,7 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            cd /var/www/sunday-research-bot
+            cd /var/opt/sunday-research-bot
 
             echo "Updating image tag in docker-compose.yml"
             # Replace placeholder with actual image tag (commit SHA)
