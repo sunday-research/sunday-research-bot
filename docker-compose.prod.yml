@@ -13,13 +13,23 @@ services:
       timeout: 3s
       retries: 3
       start_period: 30s
+<<<<<<< HEAD
+=======
+    network_mode: host
+>>>>>>> 3bfc397 (Fix network in production docker compose)
     restart: "on-failure"
 
   # bot_update_listener:
   #   image: ghcr.io/sunday-research/sunday-research-bot:PLACEHOLDER_IMAGE_TAG
   #   container_name: "${COMPOSE_PROJECT_NAME:-sunday-research-bot}.bot_update_listener"
   #   working_dir: "/app"
+<<<<<<< HEAD
   #   network_mode: host
+=======
+  #   depends_on:
+  #     - redis
+  #     - postgres
+>>>>>>> 3bfc397 (Fix network in production docker compose)
   #   volumes:
   #     - ".:/app"
   #   command: [ "/app/bin/console", "app:bot-update-listener" ]
@@ -32,4 +42,8 @@ services:
   #       reservations:
   #         cpus: '0.50'
   #         memory: 128M
+<<<<<<< HEAD
+=======
+  #   network_mode: host
+>>>>>>> 3bfc397 (Fix network in production docker compose)
   #   restart: "on-failure"
