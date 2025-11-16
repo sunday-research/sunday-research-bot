@@ -136,10 +136,10 @@ jobs:
             echo "$GHCR_TOKEN" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
             echo "Pulling the new image"
-            docker-compose pull
+            docker compose pull
 
             echo "Restarting service"
-            docker-compose up -d
+            docker compose up -d --force-recreate
 
             echo "Pruning unused images"
             docker image prune -f
