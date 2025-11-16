@@ -10,9 +10,6 @@ on:
     workflows: ["PHP Lint & Tests"]
     types:
       - completed
-    branches:
-      - issue-6
-      - master
 
 jobs:
   build-and-push:
