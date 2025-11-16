@@ -83,7 +83,6 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            mkdir -p /var/opt/sunday-research-bot
             # Remove existing docker-compose.yml if it exists (file or directory)
             rm -rf /var/opt/sunday-research-bot/docker-compose.yml
 
