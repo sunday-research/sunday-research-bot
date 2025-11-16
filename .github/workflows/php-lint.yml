@@ -1,7 +1,7 @@
 name: PHP Lint & Tests
 
 on:
-  pull_request:
+  # pull_request:
   push:
     branches:
       - issue-6
