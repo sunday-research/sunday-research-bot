@@ -9,6 +9,7 @@ namespace App\Module\BotGetUpdates;
  */
 
 use App\Module\BotCommands\DTO\GetBotCommandsDTO;
+use App\Module\BotCommands\Enum\BotCommandsEnum;
 use App\Module\BotCommands\Factory\BotCommandHandlerFactory;
 use App\Module\BotCommands\Service\BotCommandsService;
 use App\Module\BotCommands\ValueObject\BotCommand;
@@ -57,6 +58,14 @@ final readonly class BotGetUpdatesManager
 
             /** @var Message $message */
             $message = $update->getMessage();
+
+            if ($message->getType() === 'text' && $this->isHelpCommand($message)) {
+                $command = $message->getCommand();
+                if ($command !== null) {
+                    $this->handleHelpCommand($update);
+                }
+                continue;
+            }
 
             // сейчас в БД сохраняются только текстовые сообщения
             if ($message->getType() === 'text') {
@@ -129,5 +138,37 @@ final readonly class BotGetUpdatesManager
     {
         $botCommandHandler = $this->botCommandHandlerFactory->createBotCommandHandler($botCommand->getCommand());
         $botCommandHandler?->handle($update);
+    }
+
+    private function isHelpCommand(Message $message): bool
+    {
+        $text = $message->getText();
+
+        return $text !== null && (
+                $text === '/' . BotCommandsEnum::HELP->value ||
+                str_starts_with($text, '/' . BotCommandsEnum::HELP->value . '@')
+            );
+    }
+
+    private function handleHelpCommand(Update $update): void
+    {
+        /** @var Message $message */
+        $message = $update->getMessage();
+        $command = $message->getCommand();
+
+        if ($command === null) {
+            return;
+        }
+
+        try {
+            $handler = $this->botCommandHandlerFactory->createBotCommandHandler($command);
+            $handler?->handle($update);
+        } catch (\Exception $e) {
+            $this->logger->error('Help command handling failed', [
+                'error' => $e->getMessage(),
+                'update_id' => $update->getUpdateId(),
+                'command' => $command,
+            ]);
+        }
     }
 }

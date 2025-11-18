@@ -6,6 +6,7 @@ namespace App\Module\BotCommands\Factory;
 
 use App\Module\BotCommands\Contract\BotCommandHandlerInterface;
 use App\Module\BotCommands\Enum\BotCommandsEnum;
+use App\Module\BotCommands\Handler\BotCommandHelpHandler;
 use App\Module\BotCommands\Handler\BotCommandIssueHandler;
 use App\Module\BotCommands\Infrastructure\Telegram\SendMessageClient;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -25,6 +26,7 @@ final readonly class BotCommandHandlerFactory
     {
         return match ($botCommandText) {
             BotCommandsEnum::ISSUE->value => new BotCommandIssueHandler($this->messageBus, $this->telegramBotApiClient),
+            BotCommandsEnum::HELP->value => new BotCommandHelpHandler($this->messageBus, $this->telegramBotApiClient),
             default => null,
         };
     }
