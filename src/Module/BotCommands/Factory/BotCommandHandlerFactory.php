@@ -26,7 +26,7 @@ final readonly class BotCommandHandlerFactory
     {
         return match ($botCommandText) {
             BotCommandsEnum::ISSUE->value => new BotCommandIssueHandler($this->messageBus, $this->telegramBotApiClient),
-            BotCommandsEnum::HELP->value => new BotCommandHelpHandler($this->messageBus, $this->telegramBotApiClient),
+            BotCommandsEnum::HELP->value => new BotCommandHelpHandler($this->messageBus),
             default => null,
         };
     }

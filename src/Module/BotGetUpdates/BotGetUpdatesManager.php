@@ -145,9 +145,9 @@ final readonly class BotGetUpdatesManager
         $text = $message->getText();
 
         return $text !== null && (
-                $text === '/' . BotCommandsEnum::HELP->value ||
+            $text === '/' . BotCommandsEnum::HELP->value ||
                 str_starts_with($text, '/' . BotCommandsEnum::HELP->value . '@')
-            );
+        );
     }
 
     private function handleHelpCommand(Update $update): void

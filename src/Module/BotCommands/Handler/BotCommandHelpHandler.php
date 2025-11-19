@@ -15,18 +15,11 @@ final readonly class BotCommandHelpHandler implements BotCommandHandlerInterface
 {
     public function __construct(
         private MessageBusInterface $messageBus,
-        private SendMessageClient $telegramBotApiClient,
     ) {
     }
 
     public function handle(Update $update): void
     {
         $this->messageBus->dispatch(new BotCommandHelpMessage($update));
-        $this->telegramBotApiClient->sendTextMessage(
-            SendTextMessageDTO::makeDTO(
-                (string)$update->getMessage()->getChat()->getId(),
-                'Ваш запрос принят!'
-            )
-        );
     }
 }
