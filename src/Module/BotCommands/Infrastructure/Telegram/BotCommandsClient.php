@@ -15,7 +15,7 @@ use App\Module\BotCommands\ValueObject\BotCommandsList;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 
-final readonly class BotCommandsClient
+class BotCommandsClient
 {
     /**
      * @note Свойство $telegram используется неявно статичным классом \Longman\TelegramBot\Request
