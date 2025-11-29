@@ -9,7 +9,7 @@ use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Entities\User;
 
-final readonly class BotCommandHelpMessage
+class BotCommandHelpMessage
 {
     public function __construct(private Update $update)
     {

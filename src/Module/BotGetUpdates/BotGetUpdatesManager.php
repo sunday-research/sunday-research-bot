@@ -59,16 +59,8 @@ final readonly class BotGetUpdatesManager
             /** @var Message $message */
             $message = $update->getMessage();
 
-            if ($message->getType() === 'text' && $this->isHelpCommand($message)) {
-                $command = $message->getCommand();
-                if ($command !== null) {
-                    $this->handleHelpCommand($update);
-                }
-                continue;
-            }
-
-            // сейчас в БД сохраняются только текстовые сообщения
-            if ($message->getType() === 'text') {
+            // сейчас в БД сохраняются только текстовые сообщения, кроме /help
+            if ($message->getType() === 'text' && !$this->isHelpCommand($message)) {
                 $domainSubscriber = $this->subscriberService->create($message->getFrom());
                 $this->subscriberMessageService->create($message, $domainSubscriber);
             }
@@ -148,27 +140,5 @@ final readonly class BotGetUpdatesManager
             $text === '/' . BotCommandsEnum::HELP->value ||
                 str_starts_with($text, '/' . BotCommandsEnum::HELP->value . '@')
         );
-    }
-
-    private function handleHelpCommand(Update $update): void
-    {
-        /** @var Message $message */
-        $message = $update->getMessage();
-        $command = $message->getCommand();
-
-        if ($command === null) {
-            return;
-        }
-
-        try {
-            $handler = $this->botCommandHandlerFactory->createBotCommandHandler($command);
-            $handler?->handle($update);
-        } catch (\Exception $e) {
-            $this->logger->error('Help command handling failed', [
-                'error' => $e->getMessage(),
-                'update_id' => $update->getUpdateId(),
-                'command' => $command,
-            ]);
-        }
     }
 }
