@@ -14,7 +14,7 @@ use Predis\ClientInterface;
 /**
  * @see \App\Tests\Module\BotCommands\Infrastructure\Redis\Repository\BotCommandsRedisCacheRepositoryTest
  */
-final readonly class BotCommandsCacheRepository
+class BotCommandsCacheRepository
 {
     private const CACHE_KEY_PREFIX = 'bot_commands_cache';
     private const CACHE_TTL_IN_SECONDS = 3600;

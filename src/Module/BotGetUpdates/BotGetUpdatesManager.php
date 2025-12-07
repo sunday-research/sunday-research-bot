@@ -9,6 +9,7 @@ namespace App\Module\BotGetUpdates;
  */
 
 use App\Module\BotCommands\DTO\GetBotCommandsDTO;
+use App\Module\BotCommands\Enum\BotCommandsEnum;
 use App\Module\BotCommands\Factory\BotCommandHandlerFactory;
 use App\Module\BotCommands\Service\BotCommandsService;
 use App\Module\BotCommands\ValueObject\BotCommand;
@@ -58,8 +59,8 @@ final readonly class BotGetUpdatesManager
             /** @var Message $message */
             $message = $update->getMessage();
 
-            // сейчас в БД сохраняются только текстовые сообщения
-            if ($message->getType() === 'text') {
+            // сейчас в БД сохраняются только текстовые сообщения, кроме /help
+            if ($message->getType() === 'text' && !$this->isHelpCommand($message)) {
                 $domainSubscriber = $this->subscriberService->create($message->getFrom());
                 $this->subscriberMessageService->create($message, $domainSubscriber);
             }
@@ -129,5 +130,15 @@ final readonly class BotGetUpdatesManager
     {
         $botCommandHandler = $this->botCommandHandlerFactory->createBotCommandHandler($botCommand->getCommand());
         $botCommandHandler?->handle($update);
+    }
+
+    private function isHelpCommand(Message $message): bool
+    {
+        $text = $message->getText();
+
+        return $text !== null && (
+            $text === '/' . BotCommandsEnum::HELP->value ||
+                str_starts_with($text, '/' . BotCommandsEnum::HELP->value . '@')
+        );
     }
 }

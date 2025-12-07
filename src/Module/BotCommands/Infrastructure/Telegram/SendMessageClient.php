@@ -11,7 +11,7 @@ use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use RuntimeException;
 
-readonly class SendMessageClient
+class SendMessageClient
 {
     /**
      * @phpstan-ignore-next-line property.onlyWritten

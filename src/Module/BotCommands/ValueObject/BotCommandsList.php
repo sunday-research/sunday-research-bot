@@ -14,7 +14,7 @@ use Traversable;
  * @implements ArrayAccess<int, BotCommand>
  * @implements IteratorAggregate<int, BotCommand>
  */
-final class BotCommandsList implements Countable, IteratorAggregate, ArrayAccess
+class BotCommandsList implements Countable, IteratorAggregate, ArrayAccess
 {
     /**
      * @var BotCommand[]
@@ -37,9 +37,10 @@ final class BotCommandsList implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
-     * @phpstan-ignore-next-line return.unusedType
+     * @param mixed $offset
+     * @return BotCommand|null
      */
-    public function offsetGet(mixed $offset): mixed
+    public function offsetGet(mixed $offset): ?BotCommand
     {
         return $this->botCommands[$offset];
     }
