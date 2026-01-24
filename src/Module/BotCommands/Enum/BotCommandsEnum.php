@@ -17,7 +17,7 @@ enum BotCommandsEnum: string
         return [
             [
                 'command' => self::ISSUE->value,
-                'description' => 'Отправить предложение об улучшении бота или о добавлении нового функционала',
+                'description' => 'Формат "/issue <текст>". Отправить предложение об улучшении бота или о добавлении нового функционала',
             ],
             [
                 'command' => self::HELP->value,

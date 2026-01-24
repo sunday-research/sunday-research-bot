@@ -14,8 +14,10 @@ use App\Module\BotCommands\Factory\BotCommandHandlerFactory;
 use App\Module\BotCommands\Service\BotCommandsService;
 use App\Module\BotCommands\ValueObject\BotCommand;
 use App\Module\BotGetUpdates\Service\BotGetUpdatesService;
+use App\Module\BotGetUpdates\Service\IssueService;
 use App\Module\BotGetUpdates\Service\SubscriberMessageService;
 use App\Module\BotGetUpdates\Service\SubscriberService;
+use InvalidArgumentException;
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Entities\Update;
@@ -31,6 +33,7 @@ final readonly class BotGetUpdatesManager
         private SubscriberMessageService $subscriberMessageService,
         private BotCommandsService $botCommandsService,
         private BotCommandHandlerFactory $botCommandHandlerFactory,
+        private IssueService $issueService,
     ) {
     }
 
@@ -59,10 +62,20 @@ final readonly class BotGetUpdatesManager
             /** @var Message $message */
             $message = $update->getMessage();
 
-            // сейчас в БД сохраняются только текстовые сообщения, кроме /help
-            if ($message->getType() === 'text' && !$this->isHelpCommand($message)) {
+            // сейчас в БД сохраняются текстовые сообщения и команды, кроме /help
+            if (!$this->isHelpCommand($message)) {
                 $domainSubscriber = $this->subscriberService->create($message->getFrom());
-                $this->subscriberMessageService->create($message, $domainSubscriber);
+
+                if ($this->isIssueCommand($message)) {
+                    try {
+                        $this->issueService->create($message, $domainSubscriber);
+                    } catch (InvalidArgumentException $e) {
+                        $this->triggerHelpCommand($update);
+                        continue;
+                    }
+                } else {
+                    $this->subscriberMessageService->create($message, $domainSubscriber);
+                }
             }
 
             if ($message->getType() !== 'command') {
@@ -140,5 +153,25 @@ final readonly class BotGetUpdatesManager
             $text === '/' . BotCommandsEnum::HELP->value ||
                 str_starts_with($text, '/' . BotCommandsEnum::HELP->value . '@')
         );
+    }
+
+    private function isIssueCommand(Message $message): bool
+    {
+        $text = $message->getText();
+
+        if ($text === null) {
+            return false;
+        }
+
+        $text = trim($text);
+        $command = '/' . BotCommandsEnum::ISSUE->value;
+
+        return str_starts_with($text, $command);
+    }
+
+    private function triggerHelpCommand(Update $update): void
+    {
+        $helpHandler = $this->botCommandHandlerFactory->createBotCommandHandler(BotCommandsEnum::HELP->value);
+        $helpHandler?->handle($update);
     }
 }
